@@ -63,6 +63,7 @@ class TicTacToe {
 			this.applyTurn('X')
 		})
 		.catch((err) => {
+			// TODO apply error only if client side error 4xx
 			this.applyTurn('error')
 			console.error(err.response)
 		})
@@ -142,6 +143,14 @@ class TicTacToe {
 	applyState(state) {
 		for (let coordinate in this.nodes) {
 			this.nodes[coordinate].innerText = (state == 'empty') ? '' : state[coordinate]
+		}
+	}
+
+	applyTurnColor(color) {
+		if (color == 'red') {
+			stateEl.classList.add('--your-turn')
+		} else {
+			stateEl.classList.remove('--your-turn')
 		}
 	}
 
