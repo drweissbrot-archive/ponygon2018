@@ -1,0 +1,56 @@
+.input-group {
+	display grid
+	grid-template-columns 17.5fr 50fr 32.5fr
+
+	&:not(:last-child) {
+		margin-bottom 2rem
+	}
+
+	> * {
+		padding 1rem 2rem
+	}
+
+	.label {
+		text-align right
+	}
+
+	.input {
+		padding .2rem 2rem
+	}
+
+	input:not([type='checkbox']) {
+		display block
+		width 100%
+		padding .8rem 1.5rem
+	}
+
+	input[type='checkbox'] {
+		vertical-align middle
+		margin 0 1rem
+	}
+
+	&.--button {
+		.input {
+			text-align right
+		}
+	}
+}
+
+.btn,
+button {
+	padding 1rem 2rem
+
+	background none
+	border 2px solid $white
+	color $white
+
+	transition background .3s ease, color .3s ease
+	cursor pointer
+	outline none
+
+	&:active,
+	&:hover {
+		background $white
+		color $black
+	}
+}

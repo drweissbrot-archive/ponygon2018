@@ -1,0 +1,40 @@
+h1, h2, h3, h4, h5, h6 {
+	font-weight 500
+	margin 0
+}
+
+a {
+	color clr-indigo-a100
+	text-decoration none
+
+	&:active,
+	&:hover {
+		color clr-indigo-300
+	}
+}
+
+h1 {
+	font 500 4rem/1.25em $sans
+}
+
+h2 {
+	font 500 3.25rem/1.25em $sans
+}
+
+h3 {
+	font 500 2.75rem/1.25em $sans
+}
+
+h4 {
+	font 500 2.25rem/1.25em $sans
+}
+
+p,
+ul,
+ol {
+	max-width 68rem
+
+	&:not(:last-child) {
+		margin-bottom 2rem
+	}
+}

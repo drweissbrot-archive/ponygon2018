@@ -1,0 +1,54 @@
+nav {
+	&.--horizontal {
+		ul {
+			max-width none
+
+			display flex
+			align-items center
+			justify-content space-between
+		}
+
+		a,
+		li.--empty {
+			margin 0 1rem
+		}
+	}
+
+	&:not(.--horizontal) {
+		margin-top 1rem !important
+	}
+
+	ul {
+		list-style none
+		padding 0
+	}
+
+	a,
+	li.--empty {
+		display block
+		padding 1rem 2rem
+		border-radius .5rem
+		margin 1rem 0
+	}
+
+	a {
+		background rgba(#000, .2)
+
+		&,
+		&:active,
+		&:hover {
+			color $white
+		}
+
+		&.--active {
+			background rgba(#000, .4)
+		}
+
+		&:not(.--active) {
+			&:active,
+			&:hover {
+				background rgba(#000, .3)
+			}
+		}
+	}
+}

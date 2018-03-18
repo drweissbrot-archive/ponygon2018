@@ -1,0 +1,31 @@
+.grid {
+	display grid
+
+	> * {
+		margin 2rem 4rem
+
+		&.--full-width {
+			margin 2rem 0
+		}
+
+		&.--full-height {
+			margin 0 4rem
+		}
+
+		&:first-child {
+			margin-left 0
+		}
+
+		&:last-child {
+			margin-right 0
+		}
+	}
+
+	&.--one-three-fourths {
+		grid-template-columns 1fr 3fr
+	}
+
+	&.--one-four-fifths {
+		grid-template-columns 1fr 4fr
+	}
+}
