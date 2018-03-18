@@ -155,8 +155,11 @@ class TicTacToe {
 	}
 
 	applyTurn(move) {
+		let color = false
+
 		switch (move) {
 			case this.player:
+				color = 'red'
 				stateEl.innerText = 'It\'s your turn!'
 				break
 
@@ -199,6 +202,8 @@ class TicTacToe {
 			default:
 				stateEl.innerText = 'It\'s their turn.'
 		}
+
+		this.applyTurnColor(color)
 	}
 
 	showNewGameButton() {
