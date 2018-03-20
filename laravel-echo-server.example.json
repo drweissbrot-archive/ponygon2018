@@ -1,26 +1,18 @@
 {
 	"authHost": "https://ponygon.test",
 	"authEndpoint": "/broadcasting/auth",
-	"clients": [
-		{
-			"appId": "098e35637abd77cd",
-			"key": "213f6726521a82d43cc402b5e79b2081"
-		}
-	],
+	"clients": [],
 	"database": "redis",
 	"databaseConfig": {
-		"redis": {},
-		"sqlite": {
-			"databasePath": "/database/laravel-echo-server.sqlite"
-		}
+		"redis": {}
 	},
 	"devMode": true,
 	"host": null,
-	"port": "6001",
+	"port": "8443",
 	"protocol": "https",
 	"socketio": {},
-	"sslCertPath": "/home/pierre/.valet/Certificates/ponygon.test.crt",
-	"sslKeyPath": "/home/pierre/.valet/Certificates/ponygon.test.key",
+	"sslCertPath": "/path/to/your.crt",
+	"sslKeyPath": "/path/to/your.key",
 	"sslCertChainPath": "",
 	"sslPassphrase": "",
 	"apiOriginAllow": {
