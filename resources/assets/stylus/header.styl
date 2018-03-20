@@ -10,7 +10,12 @@ header {
 		font 500 2em/1em $sans
 
 		a {
-			color $white
+			color $white !important
+
+			&:active,
+			&:hover {
+				color #ccc !important
+			}
 		}
 	}
 }

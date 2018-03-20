@@ -14,6 +14,10 @@
 			Loading...
 		</h3>
 
+		<h4 class="player-area">
+			Playing as <strong id="player">X</strong>
+		</h4>
+
 		<p id="link-area" data-base="{{ route('play.tic-tac-toe.index') }}">
 			Send this link to your friend:
 			<a href="#">

@@ -5,8 +5,23 @@ const linkArea = document.querySelector('#link-area')
 const baseLink = linkArea.getAttribute('data-base')
 const linkEl = linkArea.querySelector('a')
 const newGameArea = document.querySelector('.new-game')
+const playerArea = document.querySelector('.player-area')
+const playerLabel = playerArea.querySelector('#player')
+
+let player
 
 class TicTacToe {
+	get player() {
+		return player
+	}
+
+	set player(value) {
+		player = value
+
+		playerLabel.innerHTML = player
+		playerArea.style.display = 'block'
+	}
+
 	constructor() {
 		this.nodes = {}
 		this.parseNodes()
