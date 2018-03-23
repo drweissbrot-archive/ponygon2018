@@ -17,7 +17,16 @@
 			Sorry about that :/
 		</p>
 
-		<div class="character-creation">
+		<div v-show="status == 'ready'" class="character-creation">
+			<p>
+				You'll join:
+				<span v-for="player in namesInUse">{{ player }}</span>
+			</p>
+
+			<p>
+				Please enter a username to join the lobby.
+			</p>
+
 			<!-- TODO Avatar Creation -->
 
 			<label for="username">
@@ -49,13 +58,15 @@
 			// TODO check with server if lobby exists
 			axios.get('/lobby/heartbeat/' + this.$route.params.lobby)
 			.then((res) => {
-				if (! res.data.lobby_exists) {
+				if (! res.data.id) {
 					return this.status = 'lobbyDoesntExist'
 				}
 
+				this.status = 'ready'
 				this.namesInUse = res.data.names_in_use
 			})
 			.catch((err) => {
+				console.error(err)
 				this.status = 'error'
 			})
 		},
@@ -73,6 +84,7 @@
 					//
 				})
 				.catch((err) => {
+					console.error(err)
 					this.status = 'error'
 				})
 			}

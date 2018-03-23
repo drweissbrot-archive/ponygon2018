@@ -2,7 +2,9 @@
 	<div class="game-select">
 		<h3>Select a Game</h3>
 
-		<pg-game :game="games.tictactoe" :playerCount="players.length"></pg-game>
+		<pg-game v-for="game in games"
+			:game="games[game]"
+			:playerCount="players.length"></pg-game>
 	</div>
 </template>
 

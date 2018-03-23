@@ -164,6 +164,12 @@ body {
   color: #eee;
   font: 400 1.6rem/1.5em 'Source Sans Pro', sans-serif;
 }
+body.pg-app {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: -webkit-min-content auto -webkit-min-content;
+  grid-template-rows: min-content auto min-content;
+}
 .flash {
   border-radius: 0.5rem;
   background: #555;
@@ -236,6 +242,9 @@ ol:not(:last-child) {
 }
 .grid > *:last-child {
   margin-right: 0;
+}
+.grid.\--halves {
+  grid-template-columns: 1fr 1fr;
 }
 .grid.\--one-three-fourths {
   grid-template-columns: 1fr 3fr;

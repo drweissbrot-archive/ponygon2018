@@ -93,10 +93,20 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('pg-chat', __webpack_requi
 
 var routes = [{
 	path: '/',
-	component: __webpack_require__(97)
+	component: __webpack_require__(116),
+	name: 'lobby.interstitial'
+}, {
+	path: '/create-lobby',
+	component: __webpack_require__(119),
+	name: 'lobby.create'
 }, {
 	path: '/join/:lobby',
-	component: __webpack_require__(110)
+	component: __webpack_require__(122),
+	name: 'lobby.join'
+}, {
+	path: '/lobby/:lobby',
+	component: __webpack_require__(125),
+	name: 'lobby'
 }];
 
 var router = new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
@@ -105,9 +115,15 @@ var router = new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
 
 __WEBPACK_IMPORTED_MODULE_0_vue___default.a.prototype.games = __webpack_require__(106);
 
-var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
-	router: router,
-	el: '#vue-app'
+axios.get('/lobby/register').then(function (res) {
+	__WEBPACK_IMPORTED_MODULE_0_vue___default.a.prototype.user = res.data;
+
+	var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
+		router: router,
+		el: '#vue-app'
+	});
+}).catch(function (err) {
+	//
 });
 
 /***/ }),
@@ -24358,108 +24374,8 @@ if (false) {
 }
 
 /***/ }),
-/* 97 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(11)
-/* script */
-var __vue_script__ = __webpack_require__(98)
-/* template */
-var __vue_template__ = __webpack_require__(105)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/assets/js/pages/Lobby.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-47c0b8e9", Component.options)
-  } else {
-    hotAPI.reload("data-v-47c0b8e9", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 98 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-var gameSelect = __webpack_require__(99);
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-	components: {
-		'pg-game-select': gameSelect
-	},
-
-	data: function data() {
-		return {
-			players: [{
-				name: 'drweissbrot',
-				leader: true
-			}, {
-				name: 'someone',
-				leader: false
-			}, {
-				name: 'somebody',
-				leader: false
-			}],
-			currentPlayer: {
-				name: 'drweissbrot',
-				leader: true
-			}
-		};
-	}
-});
-
-/***/ }),
+/* 97 */,
+/* 98 */,
 /* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -24512,6 +24428,8 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
 //
 //
 //
@@ -24673,11 +24591,13 @@ var render = function() {
     [
       _c("h3", [_vm._v("Select a Game")]),
       _vm._v(" "),
-      _c("pg-game", {
-        attrs: { game: _vm.games.tictactoe, playerCount: _vm.players.length }
+      _vm._l(_vm.games, function(game) {
+        return _c("pg-game", {
+          attrs: { game: _vm.games[game], playerCount: _vm.players.length }
+        })
       })
     ],
-    1
+    2
   )
 }
 var staticRenderFns = []
@@ -24691,65 +24611,7 @@ if (false) {
 }
 
 /***/ }),
-/* 105 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "lobby" }, [
-    _c("h2", [_vm._v("Lobby")]),
-    _vm._v(" "),
-    _vm._m(0),
-    _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "grid --one-one-one-third" },
-      [
-        _c("pg-player-list", {
-          attrs: { players: _vm.players, currentPlayer: _vm.currentPlayer }
-        }),
-        _vm._v(" "),
-        _c("pg-chat"),
-        _vm._v(" "),
-        _c("pg-game-select", { attrs: { players: _vm.players } })
-      ],
-      1
-    )
-  ])
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "invite-wrap" }, [
-      _vm._v(
-        "\n\t\tTo invite people to join your lobby, send them this link:\n\t\t"
-      ),
-      _c(
-        "a",
-        { attrs: { href: "https://ponygon.test/app#lobby-1234567890123456" } },
-        [
-          _vm._v(
-            "\n\t\t\thttps://ponygon.test/app#lobby-1234567890123456\n\t\t"
-          )
-        ]
-      )
-    ])
-  }
-]
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-47c0b8e9", module.exports)
-  }
-}
-
-/***/ }),
+/* 105 */,
 /* 106 */
 /***/ (function(module, exports) {
 
@@ -24877,15 +24739,21 @@ if (false) {
 }
 
 /***/ }),
-/* 110 */
+/* 110 */,
+/* 111 */,
+/* 112 */,
+/* 113 */,
+/* 114 */,
+/* 115 */,
+/* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__(11)
 /* script */
-var __vue_script__ = __webpack_require__(111)
+var __vue_script__ = __webpack_require__(117)
 /* template */
-var __vue_template__ = __webpack_require__(112)
+var __vue_template__ = __webpack_require__(118)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -24902,7 +24770,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/assets/js/pages/JoinLobby.vue"
+Component.options.__file = "resources/assets/js/pages/Lobbies/LobbyInterstitial.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -24911,9 +24779,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-4d10f55f", Component.options)
+    hotAPI.createRecord("data-v-7b7604ba", Component.options)
   } else {
-    hotAPI.reload("data-v-4d10f55f", Component.options)
+    hotAPI.reload("data-v-7b7604ba", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -24924,11 +24792,294 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 111 */
+/* 117 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+	//
+});
+
+/***/ }),
+/* 118 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "lobby-interstital" }, [
+    _c("h2", [_vm._v("Welcome to Ponygon!")]),
+    _vm._v(" "),
+    _c("div", { staticClass: "grid --halves" }, [
+      _c(
+        "div",
+        [
+          _c("h3", [_vm._v("\n\t\t\t\tCreate a Lobby\n\t\t\t")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "\n\t\t\t\tCreate a Lobby and invite your friends to join\n\t\t\t"
+            )
+          ]),
+          _vm._v(" "),
+          _c(
+            "router-link",
+            { staticClass: "btn", attrs: { to: { name: "lobby.create" } } },
+            [_vm._v("\n\t\t\t\tCreate a Lobby\n\t\t\t")]
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _vm._m(0)
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", [
+      _c("h3", [_vm._v("\n\t\t\t\tJoin a Lobby\n\t\t\t")]),
+      _vm._v(" "),
+      _c("p", [
+        _vm._v(
+          "\n\t\t\t\tJoin a Lobby that has already been created by your friends\n\t\t\t"
+        )
+      ]),
+      _vm._v(" "),
+      _c("input", {
+        attrs: {
+          type: "text",
+          placeholder: "Paste your invite code or invite link"
+        }
+      }),
+      _vm._v(" "),
+      _c("button", [_vm._v("Join a Lobby")])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-7b7604ba", module.exports)
+  }
+}
+
+/***/ }),
+/* 119 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(11)
+/* script */
+var __vue_script__ = __webpack_require__(120)
+/* template */
+var __vue_template__ = __webpack_require__(121)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/pages/Lobbies/CreateLobby.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-74effad2", Component.options)
+  } else {
+    hotAPI.reload("data-v-74effad2", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 120 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+	mounted: function mounted() {
+		var _this = this;
+
+		axios.post('/lobby/create', {
+			user: this.user.id,
+			auth: this.user.auth
+		}).then(function (res) {
+			console.log(_this);
+			_this.$router.replace({
+				name: 'lobby.join',
+				params: {
+					lobby: res.data.lobby_id
+				}
+			});
+		}).catch(function (err) {
+			console.error(err);
+		});
+	}
+});
+
+/***/ }),
+/* 121 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", [_c("p", [_vm._v("\n\t\tCreating a Lobby...\n\t")])])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-74effad2", module.exports)
+  }
+}
+
+/***/ }),
+/* 122 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(11)
+/* script */
+var __vue_script__ = __webpack_require__(123)
+/* template */
+var __vue_template__ = __webpack_require__(124)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/pages/Lobbies/JoinLobby.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-8c5e5b38", Component.options)
+  } else {
+    hotAPI.reload("data-v-8c5e5b38", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 123 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -24980,12 +25131,14 @@ var axios = __webpack_require__(40);
 
 		// TODO check with server if lobby exists
 		axios.get('/lobby/heartbeat/' + this.$route.params.lobby).then(function (res) {
-			if (!res.data.lobby_exists) {
+			if (!res.data.id) {
 				return _this.status = 'lobbyDoesntExist';
 			}
 
+			_this.status = 'ready';
 			_this.namesInUse = res.data.names_in_use;
 		}).catch(function (err) {
+			console.error(err);
 			_this.status = 'error';
 		});
 	},
@@ -25004,6 +25157,7 @@ var axios = __webpack_require__(40);
 			}).then(function (res) {
 				//
 			}).catch(function (err) {
+				console.error(err);
 				_this2.status = 'error';
 			});
 		}
@@ -25011,7 +25165,7 @@ var axios = __webpack_require__(40);
 });
 
 /***/ }),
-/* 112 */
+/* 124 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -25074,40 +25228,69 @@ var render = function() {
       ]
     ),
     _vm._v(" "),
-    _c("div", { staticClass: "character-creation" }, [
-      _c("label", { attrs: { for: "username" } }, [
-        _vm._v("\n\t\t\tUsername\n\t\t")
-      ]),
-      _vm._v(" "),
-      _c("input", {
+    _c(
+      "div",
+      {
         directives: [
           {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.username,
-            expression: "username"
+            name: "show",
+            rawName: "v-show",
+            value: _vm.status == "ready",
+            expression: "status == 'ready'"
           }
         ],
-        attrs: {
-          type: "text",
-          id: "username",
-          placeholder: "Enter your username..."
-        },
-        domProps: { value: _vm.username },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
+        staticClass: "character-creation"
+      },
+      [
+        _c(
+          "p",
+          [
+            _vm._v("\n\t\t\tYou'll join:\n\t\t\t"),
+            _vm._l(_vm.namesInUse, function(player) {
+              return _c("span", [_vm._v(_vm._s(player))])
+            })
+          ],
+          2
+        ),
+        _vm._v(" "),
+        _c("p", [
+          _vm._v("\n\t\t\tPlease enter a username to join the lobby.\n\t\t")
+        ]),
+        _vm._v(" "),
+        _c("label", { attrs: { for: "username" } }, [
+          _vm._v("\n\t\t\tUsername\n\t\t")
+        ]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.username,
+              expression: "username"
             }
-            _vm.username = $event.target.value
+          ],
+          attrs: {
+            type: "text",
+            id: "username",
+            placeholder: "Enter your username..."
+          },
+          domProps: { value: _vm.username },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.username = $event.target.value
+            }
           }
-        }
-      }),
-      _vm._v(" "),
-      _c("button", { on: { click: _vm.joinLobby } }, [
-        _vm._v("\n\t\t\tJoin Lobby\n\t\t")
-      ])
-    ])
+        }),
+        _vm._v(" "),
+        _c("button", { on: { click: _vm.joinLobby } }, [
+          _vm._v("\n\t\t\tJoin Lobby\n\t\t")
+        ])
+      ]
+    )
   ])
 }
 var staticRenderFns = []
@@ -25116,7 +25299,168 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-4d10f55f", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-8c5e5b38", module.exports)
+  }
+}
+
+/***/ }),
+/* 125 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(11)
+/* script */
+var __vue_script__ = __webpack_require__(126)
+/* template */
+var __vue_template__ = __webpack_require__(127)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/pages/Lobbies/Lobby.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-5c19e06e", Component.options)
+  } else {
+    hotAPI.reload("data-v-5c19e06e", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 126 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+var gameSelect = __webpack_require__(99);
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+	components: {
+		'pg-game-select': gameSelect
+	},
+
+	data: function data() {
+		return {
+			players: [{
+				name: 'drweissbrot',
+				leader: true
+			}, {
+				name: 'someone',
+				leader: false
+			}, {
+				name: 'somebody',
+				leader: false
+			}],
+			currentPlayer: {
+				name: 'drweissbrot',
+				leader: true
+			}
+		};
+	}
+});
+
+/***/ }),
+/* 127 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "lobby" }, [
+    _c("h2", [_vm._v("Lobby")]),
+    _vm._v(" "),
+    _vm._m(0),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "grid --one-one-one-third" },
+      [
+        _c("pg-player-list", {
+          attrs: { players: _vm.players, currentPlayer: _vm.currentPlayer }
+        }),
+        _vm._v(" "),
+        _c("pg-chat"),
+        _vm._v(" "),
+        _c("pg-game-select", { attrs: { players: _vm.players } })
+      ],
+      1
+    )
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "invite-wrap" }, [
+      _vm._v(
+        "\n\t\tTo invite people to join your lobby, send them this link:\n\t\t"
+      ),
+      _c(
+        "a",
+        { attrs: { href: "https://ponygon.test/app#lobby-1234567890123456" } },
+        [
+          _vm._v(
+            "\n\t\t\thttps://ponygon.test/app#lobby-1234567890123456\n\t\t"
+          )
+        ]
+      )
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-5c19e06e", module.exports)
   }
 }
 

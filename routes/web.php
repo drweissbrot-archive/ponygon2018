@@ -64,9 +64,11 @@ Route::group([
 Route::group([
 	'prefix' => 'lobby',
 ], function () {
+	Route::get('/register', 'LobbyController@registerAsPlayer');
+
 	Route::get('/heartbeat/{id}', 'LobbyController@heartbeat');
 
-	Route::get('/create', 'LobbyController@create');
+	Route::post('/create', 'LobbyController@create');
 
 	Route::post('/join/{id}', 'LobbyController@join');
 });
