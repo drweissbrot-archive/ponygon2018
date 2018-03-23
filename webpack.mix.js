@@ -11,7 +11,8 @@ let mix = require('laravel-mix')
  |
  */
 
-mix.js('resources/assets/js/tic-tac-toe.js', 'public/js')
+mix.js('resources/assets/js/app.js', 'public/js')
+// .js('resources/assets/js/tic-tac-toe.js', 'public/js')
 .stylus('resources/assets/stylus/app.styl', 'public/css')
 
 if (mix.inProduction()) {

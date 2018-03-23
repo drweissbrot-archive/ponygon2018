@@ -1,0 +1,54 @@
+.player-list {
+	.player {
+		display grid
+		grid-template-columns 1fr 2fr 1.4fr
+
+		padding 1.5rem 3rem
+		box-shadow 0 0 1rem rgba(#000, .5)
+
+		&:not(:last-child) {
+			margin-bottom 2rem
+		}
+
+		&.--leader {
+			//
+		}
+
+		.name {
+			font-weight bold
+			overflow hidden
+
+			p {
+				margin 0
+
+				white-space nowrap
+				overflow hidden
+				text-overflow ellipsis
+			}
+
+			.role {
+				font-weight normal
+				font-style italic
+
+				span {
+					display block
+				}
+			}
+		}
+
+		.avatar {
+			padding 0 2rem 0 0
+
+			img {
+				display block
+				max-width 100%
+			}
+		}
+
+		.actions {
+			a {
+				display block
+			}
+		}
+	}
+}
