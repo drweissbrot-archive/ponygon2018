@@ -20,7 +20,7 @@
 </template>
 
 <script>
-	const gameSelect = require('../components/GameSelect.vue')
+	const gameSelect = require('../../components/GameSelect.vue')
 
 	export default {
 		components: {

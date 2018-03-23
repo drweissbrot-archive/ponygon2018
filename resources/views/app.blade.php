@@ -4,6 +4,10 @@
 
 @endsection
 
+@section('game')
+	pg-app
+@endsection
+
 @section('content')
 	<div id="vue-app">
 		<pg-app>
