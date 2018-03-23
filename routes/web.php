@@ -15,6 +15,8 @@ Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
 
+Route::view('/app', 'app');
+
 Route::group([
 	'middleware' => 'guest',
 ], function () {
@@ -57,6 +59,16 @@ Route::group([
 	'as' => 'meta.',
 ], function () {
 	Route::view('/terms-and-conditions', 'meta.tos')->name('tos');
+});
+
+Route::group([
+	'prefix' => 'lobby',
+], function () {
+	Route::get('/heartbeat/{id}', 'LobbyController@heartbeat');
+
+	Route::get('/create', 'LobbyController@create');
+
+	Route::post('/join/{id}', 'LobbyController@join');
 });
 
 Route::group([

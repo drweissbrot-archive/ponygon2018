@@ -1,0 +1,8 @@
+{
+	"tictactoe": {
+		"shortname": "ttt",
+		"description": "A short game of classic Tic Tac Toe.",
+		"title": "Tic Tac Toe",
+		"maxPlayers": 2
+	}
+}

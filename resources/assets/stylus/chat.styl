@@ -1,0 +1,73 @@
+.chat {
+	.wrap {
+		display flex
+		flex-direction column
+		justify-content space-between
+
+		padding 1.5rem 3rem
+		background #333
+		box-shadow 0 0 1rem rgba(#000, .5)
+
+		height 100%
+	}
+
+	.message-history {
+		overflow-y scroll
+		max-height 45vh
+		height 100%
+
+		.chat-message {
+			margin 0 0 1rem 0
+
+			&.--action {
+				font-style italic
+
+				.name {
+					padding 0
+				}
+			}
+
+			.name, .message {
+				display inline-block
+			}
+
+			.name {
+				position relative
+
+				padding-right 2rem
+				font-weight bold
+
+				&:not(:hover) {
+					&::after {
+						display none
+					}
+				}
+
+				&::after {
+					content attr(data-message-datetime)
+
+					position absolute
+					left calc(100% - 1rem)
+					bottom 0
+					background rgba(#333, .75)
+					width 200%
+
+					font-weight normal
+					font-size .75em
+					line-height 1.5em
+				}
+			}
+		}
+	}
+
+	.send-message {
+		margin 2rem 0 0 0
+
+		input {
+			display block
+			width 100%
+
+			padding 1rem 1.5rem
+		}
+	}
+}
