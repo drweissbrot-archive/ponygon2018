@@ -19,7 +19,7 @@ class DrawonaryGermanSeeder extends Seeder
 
 		foreach ($words as $word) {
 			$entity = new Word;
-			$entity->word = $word;
+			$entity->word = str_replace("\n", '', $word);
 			$entity->deck_id = $deck->id;
 			$entity->approved = true;
 			$entity->save();
