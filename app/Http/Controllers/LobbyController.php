@@ -6,6 +6,7 @@ use App\Events\Game\Lobby\LeaderChanged;
 use Illuminate\Http\Request;
 use Lobby;
 use Player;
+use Ponygon;
 use Redis;
 
 class LobbyController extends Controller
@@ -72,5 +73,16 @@ class LobbyController extends Controller
 		Redis::hset('lobby:' . $id, 'leader', $newLeader);
 
 		event(new LeaderChanged($id, $newLeader));
+	}
+
+	public function startGame(Request $request, $id)
+	{
+		$user = $request->user;
+		$auth = $request->auth;
+		$game = $request->game;
+
+		Lobby::verifyPlayerIsLobbyLeader($id, $user, $auth);
+
+		Ponygon::startGame($game, $id);
 	}
 }

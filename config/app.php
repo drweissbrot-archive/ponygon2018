@@ -203,9 +203,9 @@ return [
 		'Validator' => Illuminate\Support\Facades\Validator::class,
 		'View' => Illuminate\Support\Facades\View::class,
 
+		'Ponygon' => App\Facades\Ponygon::class,
 		'Lobby' => App\Facades\Lobby::class,
 		'Player' => App\Facades\Player::class,
-		'TicTacToe' => App\Facades\TicTacToe::class,
 	],
 
 ];

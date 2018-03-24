@@ -21,7 +21,7 @@
 
 			<pg-chat></pg-chat>
 
-			<pg-game-select :players="players"></pg-game-select>
+			<pg-game-select :players="players" :isLeader="currentPlayer.leader" @startGame="startGame"></pg-game-select>
 		</div>
 	</div>
 </template>
@@ -94,6 +94,7 @@
 				Echo.channel('lobby:' + this.lobby.id)
 				.listen('Game\\Lobby\\UserJoined', this.addPlayer)
 				.listen('Game\\Lobby\\LeaderChanged', this.updateLeader)
+				.listen('Game\\Lobby\\GameStarted', this.gameStarted)
 			},
 
 			addPlayer(user) {
@@ -128,6 +129,29 @@
 				})
 				.catch((err) => {
 					console.error(err)
+				})
+			},
+
+			startGame(game) {
+				axios.post('/lobby/start/' + this.lobby.id, {
+					user: window.user.id,
+					auth: window.user.auth,
+					game
+				})
+				.then((res) => {
+					//
+				})
+				.catch((err) => {
+					console.error(err)
+				})
+			},
+
+			gameStarted(e) {
+				this.$router.push({
+					name: 'play.' + e.game,
+					params: {
+						id: e.id
+					}
 				})
 			}
 		}

@@ -75,6 +75,8 @@ Route::group([
 	Route::post('/status/{id}', 'LobbyController@status');
 
 	Route::post('/change-leader/{id}', 'LobbyController@changeLeader');
+
+	Route::post('/start/{id}', 'LobbyController@startGame');
 });
 
 Route::group([
@@ -95,5 +97,12 @@ Route::group([
 		Route::get('/register/{id}/{player}', 'TicTacToeController@registerForGame')->name('register');
 
 		Route::post('/move/{id}', 'TicTacToeController@makeMove')->name('move');
+	});
+
+	Route::group([
+		'prefix' => 'draw',
+		'as' => 'draw.',
+	], function () {
+		Route::post('/status/{id}', 'DrawonaryController@status')->name('status');
 	});
 });
