@@ -11,7 +11,8 @@
 
 		<p v-show="status == 'lobbyDoesntExist'">
 			This lobby doesn't exist.
-			Do you want to <a href="#todo">create a lobby</a>?
+			Do you want to
+			<router-link :to="{ name: 'lobby.interstitial' }">create a lobby</router-link>?
 		</p>
 
 		<p v-show="status == 'error'">
@@ -23,7 +24,7 @@
 		<div v-show="status == 'ready'" class="character-creation">
 			<p>
 				You'll join:
-				<span v-for="player in namesInUse">{{ player }}</span>
+				<span v-for="player in namesInUse" class="player-list-item">{{ player }}</span>
 			</p>
 
 			<p>
@@ -61,14 +62,14 @@
 			// TODO check with server if lobby exists
 			axios.get('/lobby/heartbeat/' + this.$route.params.lobby)
 			.then((res) => {
-				if (! res.data.id) {
-					return this.status = 'lobbyDoesntExist'
-				}
-
 				this.status = 'ready'
 				this.namesInUse = res.data.names_in_use
 			})
 			.catch((err) => {
+				if (err.response.data.message = 'This lobby does not exist.') {
+					return this.status = 'lobbyDoesntExist'
+				}
+
 				console.error(err)
 				this.status = 'error'
 			})

@@ -5,7 +5,8 @@
 		<pg-game v-for="game in games"
 			:game="game"
 			:playerCount="players.length"
-			:key="game.shortname">
+			:key="game.shortname"
+			:isLeader="isLeader">
 		</pg-game>
 	</div>
 </template>
@@ -21,6 +22,10 @@
 		props: {
 			players: {
 				default: []
+			},
+
+			isLeader: {
+				default: false
 			}
 		}
 	}

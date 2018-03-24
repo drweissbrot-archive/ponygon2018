@@ -71,7 +71,16 @@
 					this.currentPlayer.leader = (res.data.leader == this.currentPlayer.id)
 				})
 				.catch((err) => {
-					//
+					if (err.response.data.message == 'You are not a member of this lobby.') {
+						return this.$router.replace({
+							name: 'lobby.join',
+							params: {
+								lobby: this.$route.params.lobby
+							}
+						})
+					}
+
+					console.error(err.response)
 				})
 			},
 

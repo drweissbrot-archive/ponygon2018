@@ -13,7 +13,7 @@
 			</p>
 		</div>
 
-		<button>Play</button>
+		<button :disabled="! isLeader">Play</button>
 	</div>
 </template>
 
@@ -23,8 +23,13 @@
 			game: {
 				required: true
 			},
+
 			playerCount: {
 				default: 1
+			},
+
+			isLeader: {
+				default: false
 			}
 		}
 	}
