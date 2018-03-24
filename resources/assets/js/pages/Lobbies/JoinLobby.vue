@@ -33,7 +33,7 @@
 				Username
 			</label>
 
-			<input type="text" id="username" placeholder="Enter your username..." v-model="username">
+			<input type="text" id="name" placeholder="Enter your username..." v-model="name">
 
 			<button @click="joinLobby">
 				Join Lobby
@@ -50,7 +50,7 @@
 			return {
 				status: 'loading',
 				namesInUse: [],
-				username: ''
+				name: ''
 			}
 		},
 
@@ -73,19 +73,34 @@
 
 		methods: {
 			joinLobby() {
-				if (this.namesInUse.includes(this.username)) {
+				if (this.namesInUse.includes(this.name)) {
 					return alert('Your username is already in use!')
 				}
 
-				axios.post('/lobby/join/' + this.$route.params.lobby, {
-					username: this.username
+				axios.post('/lobby/register', {
+					name: this.name
 				})
 				.then((res) => {
-					//
+					window.user = res.data
+
+					axios.post('/lobby/join/' + this.$route.params.lobby, {
+						user: window.user.id,
+						auth: window.user.auth
+					})
+					.then((res) => {
+						this.$router.push({
+							name: 'lobby',
+							params: {
+								lobby: this.$route.params.lobby
+							}
+						})
+					})
+					.catch((err) => {
+						console.error(err)
+					})
 				})
 				.catch((err) => {
 					console.error(err)
-					this.status = 'error'
 				})
 			}
 		}

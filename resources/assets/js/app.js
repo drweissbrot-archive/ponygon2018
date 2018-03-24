@@ -5,6 +5,9 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
+window.games = require('./games.json')
+window.user = {}
+
 Vue.component('pg-app', require('./components/App.vue'))
 Vue.component('pg-player-list', require('./components/PlayerList.vue'))
 Vue.component('pg-chat', require('./components/Chat.vue'))
@@ -14,11 +17,6 @@ const routes = [
 		path: '/',
 		component: require('./pages/Lobbies/LobbyInterstitial.vue'),
 		name: 'lobby.interstitial'
-	},
-	{
-		path: '/create-lobby',
-		component: require('./pages/Lobbies/CreateLobby.vue'),
-		name: 'lobby.create'
 	},
 	{
 		path: '/join/:lobby',
@@ -38,15 +36,7 @@ const router = new VueRouter({
 
 Vue.prototype.games = require('./games.json')
 
-axios.get('/lobby/register')
-.then((res) => {
-	Vue.prototype.user = res.data
-
-	const app = new Vue({
-		router,
-		el: '#vue-app'
-	})
-})
-.catch((err) => {
-	//
+const app = new Vue({
+	router,
+	el: '#vue-app'
 })

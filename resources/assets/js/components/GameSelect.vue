@@ -3,8 +3,10 @@
 		<h3>Select a Game</h3>
 
 		<pg-game v-for="game in games"
-			:game="games[game]"
-			:playerCount="players.length"></pg-game>
+			:game="game"
+			:playerCount="players.length"
+			:key="game.shortname">
+		</pg-game>
 	</div>
 </template>
 

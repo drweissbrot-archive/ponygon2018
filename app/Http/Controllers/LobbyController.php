@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Game\Lobby\LeaderChanged;
 use Illuminate\Http\Request;
 use Lobby;
+use Player;
 use Redis;
 
 class LobbyController extends Controller
@@ -18,20 +20,57 @@ class LobbyController extends Controller
 
 	public function registerAsPlayer(Request $request)
 	{
-		return Lobby::registerPlayer($request->username);
+		return Player::register($request->name);
 	}
 
 	public function heartbeat($id)
 	{
 		abort_unless(Redis::exists('lobby:' . $id), 404, 'lobbyDoesntExist');
 
-		$names_in_use = Lobby::getUsernamesInUse($id);
+		$names_in_use = Lobby::getNamesInUse($id);
 
 		return compact('id', 'names_in_use');
 	}
 
-	public function join($id)
+	public function join(Request $request, $id)
 	{
-		//
+		$user = $request->user;
+		$auth = $request->auth;
+
+		Player::authenticate($user, $auth);
+
+		if (Lobby::verifyPlayerIsLobbyMember($id, $user, $auth, false)) {
+			abort(403, 'You are already a member of this lobby.');
+		}
+
+		Lobby::join($id, $user);
+	}
+
+	public function status(Request $request, $id)
+	{
+		Lobby::verifyPlayerIsLobbyMember($id, $request->user, $request->auth);
+
+		$lobby = Redis::hgetall('lobby:' . $id);
+
+		return [
+			'invite_link' => route('app') . '#/join/' . $id,
+			'players' => Lobby::getUsers($id, true),
+			'leader' => $lobby['leader'],
+			'game' => $lobby['game'],
+			'game_id' => $lobby['game_id'],
+		];
+	}
+
+	public function changeLeader(Request $request, $id)
+	{
+		$user = $request->user;
+		$auth = $request->auth;
+		$newLeader = $request->newLeader;
+
+		Lobby::verifyPlayerIsLobbyLeader($id, $user, $auth);
+
+		Redis::hset('lobby:' . $id, 'leader', $newLeader);
+
+		event(new LeaderChanged($id, $newLeader));
 	}
 }

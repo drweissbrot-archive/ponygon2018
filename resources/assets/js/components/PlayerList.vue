@@ -12,16 +12,18 @@
 
 				<p class="role">
 					<span v-if="player.leader">Lobby Leader</span>
-					<span v-if="player.name == currentPlayer.name">you</span>
+					<span v-if="player.id == currentPlayer.id">you</span>
 				</p>
 			</div>
 
 			<div class="actions">
-				<a href="#" v-if="player.name != currentPlayer.name">
+				<a href="#" v-if="player.id != currentPlayer.id">
 					Votekick
 				</a>
 
-				<a href="#" v-if="! player.leader && currentPlayer.leader">
+				<a href="#"
+					v-if="! player.leader && currentPlayer.leader"
+					@click="changeLobbyLeader($event, player.id)">
 					make Lobby Leader
 				</a>
 			</div>
@@ -35,8 +37,17 @@
 			players: {
 				required: true
 			},
+
 			currentPlayer: {
 				default: false
+			}
+		},
+
+		methods: {
+			changeLobbyLeader(e, id) {
+				e.preventDefault()
+
+				this.$emit('changeLeader', id)
 			}
 		}
 	}
