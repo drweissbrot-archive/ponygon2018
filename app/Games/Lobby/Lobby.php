@@ -2,27 +2,23 @@
 
 namespace App\Games\Lobby;
 
+use App\Events\Game\Lobby\UserJoined;
 use Player;
 use Redis;
 
 class Lobby
 {
-	public function registerPlayer($username)
-	{
-		return Player::register($username);
-	}
-
 	public function createLobby($user, $auth)
 	{
-		Player::authenticateUser($user, $auth);
+		Player::authenticate($user, $auth);
 
 		$id = $this->getId();
 
-		Redis::zadd("lobby:{$id}:players", 1, $user);
+		Redis::rpush("lobby:{$id}:players", $user);
 		Redis::expire("lobby:{$id}:players", ONE_DAY);
 
 		$lobby = [
-			'lobby_id' => $id,
+			'id' => $id,
 			'leader' => $user,
 			'game' => 'lobby',
 			'game_id' => null,
@@ -34,17 +30,73 @@ class Lobby
 		return $lobby;
 	}
 
-	public function getUsernamesInUse($id)
+	public function join($id, $user)
 	{
-		$players = Redis::zrange("lobby:{$id}:players", 0, -1);
+		Redis::rpush("lobby:{$id}:players", $user);
 
-		$namesInUse = [];
+		$name = Redis::hget('player:' . $user, 'name');
+
+		event(new UserJoined($id, $name, $user));
+	}
+
+	public function getUsers($id, $markLeader = false)
+	{
+		$players = Redis::lrange("lobby:{$id}:players", 0, -1);
+
+		$users = [];
 
 		foreach ($players as $player) {
-			$namesInUse[] = Redis::hget('player:' . $player, 'username');
+			$user = Redis::hgetall('player:' . $player);
+
+			$users[$user['id']] = [
+				'id' => $user['id'],
+				'name' => $user['name'],
+			];
 		}
 
-		return $namesInUse;
+		if ($markLeader) {
+			return $this->markLeaderInPlayers($id, $users);
+		}
+
+		return $users;
+	}
+
+	public function getNamesInUse($id)
+	{
+		return collect($this->getUsers($id))->pluck('name');
+	}
+
+	public function verifyPlayerIsLobbyMember($id, $user, $auth, $abort = true)
+	{
+		Player::authenticate($user, $auth);
+
+		if (! Redis::lrem("lobby:{$id}:players", 1, $user)) {
+			if ($abort) {
+				abort(403, 'You are not a member of this lobby.');
+			}
+
+			return false;
+		}
+
+		Redis::rpush("lobby:{$id}:players", $user);
+
+		return true;
+	}
+
+	public function verifyPlayerIsLobbyLeader($id, $user, $auth)
+	{
+		Player::authenticate($user, $auth);
+
+		abort_unless(Redis::hget('lobby:' . $id, 'leader') === $user, 403, 'You are not the lobby leader.');
+	}
+
+	protected function markLeaderInPlayers($id, $users)
+	{
+		$leader = Redis::hget('lobby:' . $id, 'leader');
+
+		$users[$leader]['leader'] = true;
+
+		return $users;
 	}
 
 	protected function getId($iteration = 0)

@@ -4,5 +4,11 @@
 		"description": "A short game of classic Tic Tac Toe.",
 		"title": "Tic Tac Toe",
 		"maxPlayers": 2
+	},
+
+	"drawonary": {
+		"shortname": "draw",
+		"description": "Guess the word that is being drawn.",
+		"title": "Donnerstagsmaler"
 	}
 }

@@ -15,7 +15,7 @@ Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
 
-Route::view('/app', 'app');
+Route::view('/app', 'app')->name('app');
 
 Route::group([
 	'middleware' => 'guest',
@@ -64,13 +64,17 @@ Route::group([
 Route::group([
 	'prefix' => 'lobby',
 ], function () {
-	Route::get('/register', 'LobbyController@registerAsPlayer');
+	Route::post('/register', 'LobbyController@registerAsPlayer');
 
 	Route::get('/heartbeat/{id}', 'LobbyController@heartbeat');
 
 	Route::post('/create', 'LobbyController@create');
 
 	Route::post('/join/{id}', 'LobbyController@join');
+
+	Route::post('/status/{id}', 'LobbyController@status');
+
+	Route::post('/change-leader/{id}', 'LobbyController@changeLeader');
 });
 
 Route::group([

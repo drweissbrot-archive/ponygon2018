@@ -6,22 +6,22 @@ use Redis;
 
 class Player
 {
-	public function register($username)
+	public function register($name)
 	{
-		$username = ($username) ?: 'some random username'; // TODO generate random usernames
+		$name = ($name) ?: 'some random username'; // TODO generate random names
 
 		$id = $this->getId();
 
 		$auth = str_random(128);
 
-		Redis::hmset('player:' . $id, compact('id', 'auth', 'username'));
+		Redis::hmset('player:' . $id, compact('id', 'auth', 'name'));
 
 		Redis::expire('player:' . $id, ONE_DAY);
 
-		return compact('id', 'auth', 'username');
+		return compact('id', 'auth', 'name');
 	}
 
-	public function authenticateUser($user, $auth)
+	public function authenticate($user, $auth)
 	{
 		abort_unless(Redis::hget('player:' . $user, 'auth') === $auth, 403, 'Invalid auth code.');
 	}

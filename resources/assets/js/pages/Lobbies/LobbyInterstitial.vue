@@ -2,6 +2,14 @@
 	<div class="lobby-interstital">
 		<h2>Welcome to Ponygon!</h2>
 
+		<div>
+			<p>
+				Please enter a username.
+			</p>
+
+			<input type="text" placeholder="Enter your username..." v-model="name">
+		</div>
+
 		<div class="grid --halves">
 			<div>
 				<h3>
@@ -12,9 +20,9 @@
 					Create a Lobby and invite your friends to join
 				</p>
 
-				<router-link :to="{name: 'lobby.create'}" class="btn">
+				<button @click="createLobby">
 					Create a Lobby
-				</router-link>
+				</button>
 			</div>
 
 			<div>
@@ -36,6 +44,43 @@
 
 <script>
 	export default {
-		//
+		data() {
+			return {
+				name: ''
+			}
+		},
+
+		methods: {
+			register() {
+				return axios.post('/lobby/register', {
+					name: this.name
+				})
+				.then((res) => {
+					window.user = res.data
+				})
+			},
+
+			async createLobby(e) {
+				e.preventDefault()
+
+				await this.register()
+
+				axios.post('/lobby/create', {
+					user: window.user.id,
+					auth: window.user.auth
+				})
+				.then((res) => {
+					this.$router.push({
+						name: 'lobby',
+						params: {
+							lobby: res.data.id
+						}
+					})
+				})
+				.catch((err) => {
+					console.error(err)
+				})
+			}
+		}
 	}
 </script>
