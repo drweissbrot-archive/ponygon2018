@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Facades;
+namespace App\Facades\Games;
 
 use Illuminate\Support\Facades\Facade;
 

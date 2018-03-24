@@ -27,6 +27,11 @@ const routes = [
 		path: '/lobby/:lobby',
 		component: require('./pages/Lobbies/Lobby.vue'),
 		name: 'lobby'
+	},
+	{
+		path: '/play/drawonary/:id',
+		component: require('./components/Game/Drawonary/Drawonary.vue'),
+		name: 'play.drawonary'
 	}
 ]
 

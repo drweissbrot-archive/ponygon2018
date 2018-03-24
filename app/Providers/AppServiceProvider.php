@@ -24,9 +24,11 @@ class AppServiceProvider extends ServiceProvider
 	public function register()
 	{
 		$facades = [
-			'ticTacToe' => \App\Games\TicTacToe\TicTacToe::class,
+			'ponygon' => \App\Games\Ponygon::class,
 			'lobby' => \App\Games\Lobby\Lobby::class,
 			'player' => \App\Games\Lobby\Player::class,
+			'ticTacToe' => \App\Games\TicTacToe\TicTacToe::class,
+			'drawonary' => \App\Games\Drawonary\Drawonary::class,
 		];
 
 		foreach ($facades as $facade => $class) {

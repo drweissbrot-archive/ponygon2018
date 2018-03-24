@@ -5,6 +5,7 @@
 		<div class="player" :class="{'--leader': player.leader}" v-for="player in players">
 			<div class="avatar">
 				<img src="https://placehold.it/500x500">
+				<span class="place" v-if="player.place">#{{ player.place }}</span>
 			</div>
 
 			<div class="name">
@@ -13,6 +14,7 @@
 				<p class="role">
 					<span v-if="player.leader">Lobby Leader</span>
 					<span v-if="player.id == currentPlayer.id">you</span>
+					<span v-if="player.points !== undefined">{{ player.points }} pts</span>
 				</p>
 			</div>
 

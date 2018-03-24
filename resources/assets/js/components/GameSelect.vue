@@ -6,7 +6,8 @@
 			:game="game"
 			:playerCount="players.length"
 			:key="game.shortname"
-			:isLeader="isLeader">
+			:isLeader="isLeader"
+			@startGame="$emit('startGame', game.shortname)">
 		</pg-game>
 	</div>
 </template>
