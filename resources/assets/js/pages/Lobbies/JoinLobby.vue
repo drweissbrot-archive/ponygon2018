@@ -1,6 +1,9 @@
 <template>
 	<div class="join-lobby">
-		<h2>Joining Lobby {{ $route.params.lobby }}</h2>
+		<h2>
+			Joining Lobby
+			<span class="lobby-id">{{ $route.params.lobby }}</span>
+		</h2>
 
 		<p v-show="status == 'loading'">
 			Loading...

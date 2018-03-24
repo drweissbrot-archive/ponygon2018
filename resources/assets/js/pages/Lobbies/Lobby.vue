@@ -1,6 +1,9 @@
 <template>
 	<div class="lobby">
-		<h2>Lobby</h2>
+		<h2>
+			Lobby
+			<span class="lobby-id">{{ lobby.id }}</span>
+		</h2>
 
 		<div v-show="lobby.inviteLink" class="invite-wrap">
 			To invite people to join your lobby, send them this link:
