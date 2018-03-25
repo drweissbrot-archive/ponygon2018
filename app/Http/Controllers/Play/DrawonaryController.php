@@ -28,6 +28,8 @@ class DrawonaryController extends Controller
 			'turn' => $data['turn'],
 			'scoreboard' => $data['scoreboard'],
 			'order' => $data['order'],
+			'round' => $data['round'],
+			'rounds' => $data['rounds'],
 		];
 	}
 

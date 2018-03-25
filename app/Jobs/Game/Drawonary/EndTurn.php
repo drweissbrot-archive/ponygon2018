@@ -10,7 +10,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Redis;
 
-class ForceEndTurn implements ShouldQueue
+class EndTurn implements ShouldQueue
 {
 	use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -35,15 +35,18 @@ class ForceEndTurn implements ShouldQueue
 	 */
 	public function handle()
 	{
-		if (Redis::hget('game:' . $this->id, 'word') !== $this->word) {
+		if ($this->word && Redis::hget('game:' . $this->id, 'word') !== $this->word) {
 			// if current word doesn't match the word noted when the job was
 			// queued, a new turn has already begun
 			return;
 		}
 
-		Redis::hdel('game:' . $this->id, 'word');
+		$addedPoints = Redis::hget('game:' . $this->id, 'roundData');
 
-		event(new TurnEnded($this->id));
+		Redis::hdel('game:' . $this->id, 'word');
+		Redis::hdel('game:' . $this->id, 'roundData');
+
+		event(new TurnEnded($this->id, json_decode($addedPoints)));
 
 		StartWordSelection::dispatch($this->id)
 			->delay(now()->addSeconds(5));

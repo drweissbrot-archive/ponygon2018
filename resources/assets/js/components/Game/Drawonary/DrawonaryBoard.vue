@@ -11,12 +11,24 @@
 				@wordSelected="$emit('wordSelected', $event)">
 			</pg-draw-select-word-modal>
 
+			<pg-draw-turn-ended-modal v-show="turnEnded"
+				:addedPoints="turnEnded"
+				:players="players"></pg-draw-turn-ended-modal>
+
+			<pg-draw-selecting-word-modal v-show="selectingUser" :user="selectingUser"></pg-draw-selecting-word-modal>
+
 			<pg-draw-drawingboard :remaining="backgroundRemaining"></pg-draw-drawingboard>
 		</div>
 
-		<div class="grid --halves">
+		<div class="grid --two-one-two-fifths">
 			<p>
 				<strong>{{ turn }}</strong> is {{ action }}
+			</p>
+
+			<p class="text-center">
+				<span v-if="round && rounds">
+					Round {{ round }} of {{ rounds }}
+				</span>
 			</p>
 
 			<p class="remaining" v-show="turnEndsAt">
@@ -39,7 +51,9 @@
 	export default {
 		components: {
 			'pg-draw-drawingboard': require('./Drawingboard.vue'),
-			'pg-draw-select-word-modal': require('./SelectWordModal.vue')
+			'pg-draw-select-word-modal': require('./SelectWordModal.vue'),
+			'pg-draw-turn-ended-modal': require('./TurnEndedModal.vue'),
+			'pg-draw-selecting-word-modal': require('./SelectingWordModal.vue')
 		},
 
 		data() {
@@ -73,6 +87,26 @@
 
 			endsAtIsSelection: {
 				default: false
+			},
+
+			round: {
+				default: null
+			},
+
+			rounds: {
+				default: null
+			},
+
+			turnEnded: {
+				default: false
+			},
+
+			selectingUser: {
+				default: false
+			},
+
+			players: {
+				required: true
 			}
 		},
 

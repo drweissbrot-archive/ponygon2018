@@ -16,6 +16,8 @@ class WordGuessed implements ShouldBroadcastNow
 
 	public $user;
 
+	public $time;
+
 	public $scoreboard;
 
 	/**
@@ -23,13 +25,15 @@ class WordGuessed implements ShouldBroadcastNow
 	 *
 	 * @param mixed $id
 	 * @param mixed $user
+	 * @param mixed $scoreboard
+	 * @param mixed $time
 	 */
-	public function __construct($id, $user)
+	public function __construct($id, $user, $time, $scoreboard)
 	{
 		$this->id = $id;
 		$this->user = $user;
-
-		$this->scoreboard = Redis::hget('game:' . $id, 'scoreboard');
+		$this->time = $time;
+		$this->scoreboard = $scoreboard;
 	}
 
 	/**

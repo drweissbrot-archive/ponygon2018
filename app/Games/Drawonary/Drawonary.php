@@ -8,9 +8,10 @@ use App\Events\Game\Drawonary\WordSelected;
 use App\Events\Game\Lobby\ChatMessage;
 use App\Events\Game\Lobby\GameStarted;
 use App\Games\Game;
-use App\Jobs\Game\Drawonary\ForceEndTurn;
+use App\Jobs\Game\Drawonary\EndTurn;
 use App\Jobs\Game\Drawonary\RandomizeWordSelection;
 use App\Models\Drawonary\Deck;
+use Illuminate\Support\Carbon;
 use Redis;
 
 class Drawonary extends Game
@@ -33,8 +34,8 @@ class Drawonary extends Game
 			'order' => $order,
 			'usedWords' => null,
 			'possibleWords' => null,
+			'roundData' => '{}',
 		]);
-		// Redis::expire('game:' . $id, ONE_DAY); // unnecessary
 
 		$this->updateLobby($lobby, 'draw', $id);
 
@@ -72,7 +73,7 @@ class Drawonary extends Game
 
 		$selectEndsAt = now()->addSeconds(15);
 
-		event(new SelectingWord($id, Redis::hget('game:' . $id, 'turn'), $selectEndsAt));
+		event(new SelectingWord($id, Redis::hget('game:' . $id, 'turn'), $selectEndsAt->format('c')));
 
 		RandomizeWordSelection::dispatch($id, $possibleWords)
 			->delay($selectEndsAt);
@@ -101,7 +102,7 @@ class Drawonary extends Game
 
 		event(new WordSelected($id, mb_strlen($word), $turnEnd));
 
-		ForceEndTurn::dispatch($id, $word)->delay($turnEnd);
+		EndTurn::dispatch($id, $word)->delay($turnEnd);
 	}
 
 	public function advanceTurn($id)
@@ -144,13 +145,11 @@ class Drawonary extends Game
 		$message = trim(mb_strtolower($message));
 
 		if ($word == $message) {
-			// TODO HIER FORTFAHREN
-			// aply points to scoreboard
-			return event(new WordGuessed($gameId, $user, now()));
+			return $this->guessWord($gameId, $user);
 		}
 
 		// the word is not guessed -- broadcast the message
-		event(new ChatMessage($gameId, $user, $message, now()));
+		event(new ChatMessage($lobbyId, $user, $message, now()));
 
 		$similarity = similar_text($word, $message);
 
@@ -163,9 +162,26 @@ class Drawonary extends Game
 		}
 	}
 
+	protected function endTurnIfNeeded($id)
+	{
+		$roundData = Redis::hget('game:' . $id, 'roundData');
+		$roundData = json_decode($roundData, true);
+
+		$players = Redis::hget('game:' . $id, 'order');
+		$players = explode(':', $players);
+
+		if (count($roundData) != count($players) - 1) {
+			return false;
+		}
+
+		EndTurn::dispatchNow($id, false);
+	}
+
 	protected function getPlayerOrder($lobby)
 	{
 		$players = Redis::lrange("lobby:{$lobby}:players", 0, -1);
+
+		shuffle($players);
 
 		return implode($players, ':');
 	}
@@ -181,5 +197,34 @@ class Drawonary extends Game
 		}
 
 		return $scoreboard->toJson();
+	}
+
+	protected function guessWord($id, $user)
+	{
+		abort_if(Redis::hget('game:' . $id, 'turn') == $user, 403, 'You may not guess the word while drawing.');
+
+		$roundData = json_decode(Redis::hget('game:' . $id, 'roundData') ?? '{}');
+		abort_if($roundData->{$user} ?? false, 403, 'You have already guessed the word.');
+
+		$now = now();
+		$roundEnd = Redis::hget('game:' . $id, 'turnEnd');
+		$roundEnd = Carbon::parse($roundEnd);
+
+		$remainingTime = $roundEnd->diffInSeconds($now);
+		$points = $remainingTime * 5 + 90;
+
+		$roundData->{$user} = $points;
+		$roundData = json_encode($roundData);
+
+		$scoreboard = new Scoreboard;
+		$scoreboard = $scoreboard->fromJson(Redis::hget('game:' . $id, 'scoreboard'))
+			->addPoints($user, $points)
+			->toJson();
+
+		Redis::hmset('game:' . $id, compact('scoreboard', 'roundData'));
+
+		$this->endTurnIfNeeded($id);
+
+		return event(new WordGuessed($id, $user, $now, $scoreboard));
 	}
 }
