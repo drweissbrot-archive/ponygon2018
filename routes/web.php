@@ -104,5 +104,9 @@ Route::group([
 		'as' => 'draw.',
 	], function () {
 		Route::post('/status/{id}', 'DrawonaryController@status')->name('status');
+
+		Route::post('/words/{id}', 'DrawonaryController@getWords')->name('words');
+
+		Route::post('/select/{id}', 'DrawonaryController@selectWord')->name('select');
 	});
 });

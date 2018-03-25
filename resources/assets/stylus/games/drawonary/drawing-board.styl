@@ -1,0 +1,22 @@
+.drawonary-drawing-board {
+	.time-remaining {
+		position absolute
+		padding 0 3rem
+
+		color rgba(#000, .15)
+		font-size 16rem
+		line-height 1em
+
+		transition opacity .2s ease
+		pointer-events none
+
+		&:not(.--active) {
+			opacity 0
+		}
+	}
+
+	canvas {
+		background #fff
+		max-width 100%
+	}
+}

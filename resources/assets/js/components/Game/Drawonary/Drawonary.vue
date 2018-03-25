@@ -5,7 +5,13 @@
 		<div class="grid --one-three-one-fifth">
 			<pg-player-list :players="players"></pg-player-list>
 
-			<pg-draw-board></pg-draw-board>
+			<pg-draw-board :words="words"
+				:wordLength="wordLength"
+				:turn="turn"
+				:action="action"
+				:turnEndsAt="turnEndsAt"
+				@wordSelected="selectWord">
+			</pg-draw-board>
 
 			<pg-chat></pg-chat>
 		</div>
@@ -25,24 +31,35 @@
 			return {
 				id: this.$route.params.id,
 
+				words: null,
+				wordLength: 0,
+
+				turn: null,
+				action: null,
+				turnEndsAt: null,
+
 				players: []
 			}
 		},
 
-		mounted() {
-			this.getStatus()
+		async mounted() {
+			await this.getStatus()
 			this.subscribe()
 		},
 
 		methods: {
 			getStatus() {
-				axios.post('/play/draw/status/' + this.id, {
+				return axios.post('/play/draw/status/' + this.id, {
 					user: window.user.id,
 					auth: window.user.auth
 				})
 				.then((res) => {
-					let players = JSON.parse(res.data.scoreboard)
+					this.id = res.data.id
+					this.lobby_id = res.data.lobby_id
+					this.deck = res.data.deck
+					this.turn = res.data.turn
 
+					let players = JSON.parse(res.data.scoreboard)
 					let order = res.data.order.split(':')
 
 					for (let i = 0; i < order.length; i++) {
@@ -56,6 +73,8 @@
 
 					// TODO is this order actually the right order?
 					this.players = order
+
+					this.onSelectingWord({user: this.turn})
 				})
 				.catch((err) => {
 					console.error(err)
@@ -63,7 +82,68 @@
 			},
 
 			subscribe() {
+				Echo.channel('game:' + this.id)
+				.listen('Game\\Drawonary\\SelectingWord', this.onSelectingWord)
+				.listen('Game\\Drawonary\\WordSelected', this.onWordSelected)
+				.listen('Game\\Drawonary\\TurnEnded', this.onTurnEnded)
+			},
+
+			onSelectingWord(e) {
+				if (e.user == window.user.id) {
+					// current user is selecting word! PANIC!
+					this.getWords()
+				}
+
+				let player = this.findPlayerById(e.user)
+
+				this.turn = (player) ? player.name : 'someone'
+				this.action = 'selecting a word'
+				// TODO show "user is selecting" message
+			},
+
+			onWordSelected(e) {
+				this.wordLength = e.wordLength
+				this.action = 'drawing'
+				this.turnEndsAt = e.turnEndsAt
+			},
+
+			onTurnEnded(e) {
 				//
+			},
+
+			getWords() {
+				axios.post('/play/draw/words/' + this.id, {
+					user: window.user.id,
+					auth: window.user.auth
+				})
+				.then((res) => {
+					this.words = res.data.words
+				})
+				.catch((err) => {
+					console.error(err)
+				})
+			},
+
+			selectWord(word) {
+				axios.post('/play/draw/select/' + this.id, {
+					user: window.user.id,
+					auth: window.user.auth,
+					word
+				})
+				.then((res) => {
+					this.words = null
+				})
+				.catch((err) => {
+					console.error(err)
+				})
+			},
+
+			findPlayerById(id) {
+				for (let player of this.players) {
+					if (player.id === id) {
+						return player
+					}
+				}
 			}
 		}
 	}
