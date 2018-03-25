@@ -77,6 +77,8 @@ Route::group([
 	Route::post('/change-leader/{id}', 'LobbyController@changeLeader');
 
 	Route::post('/start/{id}', 'LobbyController@startGame');
+
+	Route::post('/chat/{id}', 'LobbyController@postChatMessage');
 });
 
 Route::group([

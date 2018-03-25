@@ -1,7 +1,6 @@
 <template>
 	<div class="chat-message" :class="{'--action': isAction}">
-		<div class="name"
-			data-message-datetime="Mar 23 · 00:31:32">
+		<div class="name" :data-message-datetime="time">
 			{{ name }}
 		</div>
 
@@ -17,12 +16,15 @@
 			name: {
 				required: true
 			},
-			datetime: {
+
+			time: {
 				default: null
 			},
+
 			message: {
 				required: true
 			},
+
 			isAction: {
 				default: false
 			}

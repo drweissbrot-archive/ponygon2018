@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Game\Lobby\ChatMessage;
 use App\Events\Game\Lobby\LeaderChanged;
 use Illuminate\Http\Request;
 use Lobby;
@@ -84,5 +85,20 @@ class LobbyController extends Controller
 		Lobby::verifyPlayerIsLobbyLeader($id, $user, $auth);
 
 		Ponygon::startGame($game, $id);
+	}
+
+	public function postChatMessage(Request $request, $id)
+	{
+		$user = $request->user;
+		$auth = $request->auth;
+		$message = $request->message;
+
+		if (mb_strlen($message) < 1) {
+			return;
+		}
+
+		Lobby::verifyPlayerIsLobbyMember($id, $user, $auth);
+
+		event(new ChatMessage($id, $user, $message, now()));
 	}
 }

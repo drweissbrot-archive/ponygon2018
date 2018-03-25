@@ -14,7 +14,7 @@
 				@wordSelected="selectWord">
 			</pg-draw-board>
 
-			<pg-chat></pg-chat>
+			<pg-chat :lobby="this.lobbyId" :players="players"></pg-chat>
 		</div>
 	</div>
 </template>
@@ -23,16 +23,15 @@
 	const axios = require('axios')
 	const moment = require('moment')
 
-	const board = require('./DrawonaryBoard.vue')
-
 	export default {
 		components: {
-			'pg-draw-board': board
+			'pg-draw-board': require('./DrawonaryBoard.vue')
 		},
 
 		data() {
 			return {
 				id: this.$route.params.id,
+				lobbyId: null,
 
 				words: null,
 				wordLength: 0,
@@ -59,7 +58,7 @@
 				})
 				.then((res) => {
 					this.id = res.data.id
-					this.lobby_id = res.data.lobby_id
+					this.lobbyId = res.data.lobby_id
 					this.deck = res.data.deck
 					this.turn = res.data.turn
 

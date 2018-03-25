@@ -13,11 +13,9 @@
 </template>
 
 <script>
-	const gameSelectGame = require('./GameSelect-Game.vue')
-
 	export default {
 		components: {
-			'pg-game': gameSelectGame
+			'pg-game': require('./GameSelect-Game.vue')
 		},
 
 		props: {

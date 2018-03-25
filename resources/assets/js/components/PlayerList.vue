@@ -25,7 +25,7 @@
 
 				<a href="#"
 					v-if="! player.leader && currentPlayer.leader"
-					@click="changeLobbyLeader($event, player.id)">
+					@click.prevent="changeLobbyLeader($event, player.id)">
 					make Lobby Leader
 				</a>
 			</div>
@@ -47,8 +47,6 @@
 
 		methods: {
 			changeLobbyLeader(e, id) {
-				e.preventDefault()
-
 				this.$emit('changeLeader', id)
 			}
 		}
