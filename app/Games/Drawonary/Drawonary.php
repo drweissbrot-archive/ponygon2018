@@ -3,7 +3,9 @@
 namespace App\Games\Drawonary;
 
 use App\Events\Game\Drawonary\SelectingWord;
+use App\Events\Game\Drawonary\WordGuessed;
 use App\Events\Game\Drawonary\WordSelected;
+use App\Events\Game\Lobby\ChatMessage;
 use App\Events\Game\Lobby\GameStarted;
 use App\Games\Game;
 use App\Jobs\Game\Drawonary\ForceEndTurn;
@@ -131,6 +133,34 @@ class Drawonary extends Game
 		Redis::hset('game:' . $id, 'turn', $nextPlayer);
 
 		return $nextPlayer;
+	}
+
+	public function analyzeChatMessage($lobbyId, $user, $message)
+	{
+		$gameId = Redis::hget('lobby:' . $lobbyId, 'game_id');
+		$word = Redis::hget('game:' . $gameId, 'word');
+
+		$word = trim(mb_strtolower($word));
+		$message = trim(mb_strtolower($message));
+
+		if ($word == $message) {
+			// TODO HIER FORTFAHREN
+			// aply points to scoreboard
+			return event(new WordGuessed($gameId, $user, now()));
+		}
+
+		// the word is not guessed -- broadcast the message
+		event(new ChatMessage($gameId, $user, $message, now()));
+
+		$similarity = similar_text($word, $message);
+
+		if ($similarity > mb_strlen($word) - 2) {
+			return [
+				'emitEventToParent' => true,
+				'word' => $message,
+				'closeGuess' => $similarity,
+			];
+		}
 	}
 
 	protected function getPlayerOrder($lobby)

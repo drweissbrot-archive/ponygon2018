@@ -14,7 +14,11 @@
 				@wordSelected="selectWord">
 			</pg-draw-board>
 
-			<pg-chat :lobby="this.lobbyId" :players="players"></pg-chat>
+			<pg-chat ref="chat"
+				:lobby="this.lobbyId"
+				:players="players"
+				@chatMessageAnalyzed="closeGuess">
+			</pg-chat>
 		</div>
 	</div>
 </template>
@@ -62,20 +66,7 @@
 					this.deck = res.data.deck
 					this.turn = res.data.turn
 
-					let players = JSON.parse(res.data.scoreboard)
-					let order = res.data.order.split(':')
-
-					for (let i = 0; i < order.length; i++) {
-						for (let j = 0; j < players.length; j++) {
-							if (players[j].id == order[i]) {
-								order[i] = players[j]
-								break
-							}
-						}
-					}
-
-					// TODO is this order actually the right order?
-					this.players = order
+					this.applyScoreboardSorted(JSON.parse(res.data.scoreboard), res.data.order.split(':'))
 
 					this.onSelectingWord({
 						user: this.turn,
@@ -92,6 +83,7 @@
 				.listen('Game\\Drawonary\\SelectingWord', this.onSelectingWord)
 				.listen('Game\\Drawonary\\WordSelected', this.onWordSelected)
 				.listen('Game\\Drawonary\\TurnEnded', this.onTurnEnded)
+				.listen('Game\\Drawonary\\WordGuessed', this.onWordGuessed)
 			},
 
 			onSelectingWord(e) {
@@ -119,6 +111,40 @@
 
 			onTurnEnded(e) {
 				//
+			},
+
+			onWordGuessed(e) {
+				this.$refs.chat.applyChatMessage({
+					user: e.user,
+					message: 'guessed the word!',
+					isAction: true,
+					time: []
+				})
+
+				this.applyScoreboardSorted(e.scoreboard, this.players)
+			},
+
+			closeGuess(e) {
+				this.$refs.chat.applyChatMessage({
+					user: null,
+					message: e.word + ' is close!',
+					time: [],
+					isAction: true
+				})
+			},
+
+			applyScoreboardSorted(scoreboard, order) {
+				for (let i = 0; i < order.length; i++) {
+					for (let j = 0; j < scoreboard.length; j++) {
+						if (scoreboard[j].id == order[i]) {
+							order[i] = scoreboard[j]
+							break
+						}
+					}
+				}
+
+				// TODO is this order actually the right order?
+				this.players = order
 			},
 
 			getWords() {

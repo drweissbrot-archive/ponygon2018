@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\Game\Lobby\ChatMessage;
 use App\Events\Game\Lobby\LeaderChanged;
 use Illuminate\Http\Request;
 use Lobby;
@@ -99,6 +98,6 @@ class LobbyController extends Controller
 
 		Lobby::verifyPlayerIsLobbyMember($id, $user, $auth);
 
-		event(new ChatMessage($id, $user, $message, now()));
+		return Lobby::sendChatMessage($id, $user, $message);
 	}
 }
