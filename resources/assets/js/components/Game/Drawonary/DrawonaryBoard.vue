@@ -19,7 +19,7 @@
 
 			<pg-draw-game-ended-modal v-if="gameEnded" :players="players" :lobby="lobby"></pg-draw-game-ended-modal>
 
-			<pg-draw-drawingboard :remaining="backgroundRemaining"></pg-draw-drawingboard>
+			<pg-draw-drawingboard :drawing="drawing" :remaining="backgroundRemaining"></pg-draw-drawingboard>
 		</div>
 
 		<div class="grid --two-one-two-fifths">
@@ -118,6 +118,10 @@
 
 			lobby: {
 				required: true
+			},
+
+			drawing: {
+				default: false
 			}
 		},
 
