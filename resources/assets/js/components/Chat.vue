@@ -5,6 +5,7 @@
 		<div class="wrap">
 			<div class="message-history" ref="history">
 				<pg-chat-message v-for="message in messages"
+					:key="message.id"
 					:name="message.user"
 					:message="message.message"
 					:time="message.time"
@@ -49,6 +50,19 @@
 			this.subscribe()
 		},
 
+		destroyed() {
+			console.log('leaving')
+			Echo.leave('lobby:' + this.lobby)
+		},
+
+		watch: {
+			lobby(newLobby, oldLobby) {
+				Echo.leave('lobby:' + oldLobby)
+
+				this.subscribe()
+			}
+		},
+
 		methods: {
 			postChatMessage() {
 				axios.post('/lobby/chat/' + this.lobby, {
@@ -77,7 +91,9 @@
 			},
 
 			applyChatMessage(e) {
+
 				this.messages.push({
+					id: this.messages.length,
 					user: this.findPlayerById(e.user).name,
 					message: e.message,
 					time: moment(e.time).format('MMM D, HH:mm:ss'),

@@ -2,14 +2,17 @@
 	<div class="drawonary-board">
 		<h3 class="word-to-guess">
 			<span v-for="n in wordLength">_ </span>
+			<span v-if="! wordLength" class="no-word-length">.</span>
 		</h3>
 
-		<pg-draw-select-word-modal v-show="words"
-			:words="words"
-			@wordSelected="$emit('wordSelected', $event)">
-		</pg-draw-select-word-modal>
+		<div class="board-and-modal-wrap">
+			<pg-draw-select-word-modal v-show="words"
+				:words="words"
+				@wordSelected="$emit('wordSelected', $event)">
+			</pg-draw-select-word-modal>
 
-		<pg-draw-drawingboard :remaining="backgroundRemaining"></pg-draw-drawingboard>
+			<pg-draw-drawingboard :remaining="backgroundRemaining"></pg-draw-drawingboard>
+		</div>
 
 		<div class="grid --halves">
 			<p>
