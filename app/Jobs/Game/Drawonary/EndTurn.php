@@ -3,6 +3,7 @@
 namespace App\Jobs\Game\Drawonary;
 
 use App\Events\Game\Drawonary\TurnEnded;
+use App\Facades\Games\Drawonary;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -40,6 +41,8 @@ class EndTurn implements ShouldQueue
 			// queued, a new turn has already begun
 			return;
 		}
+
+		Drawonary::givePointsToPersonDrawing($this->id);
 
 		$addedPoints = Redis::hget('game:' . $this->id, 'roundData');
 

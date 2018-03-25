@@ -127,6 +127,18 @@ class Drawonary extends Game
 		return $nextPlayer;
 	}
 
+	public function givePointsToPersonDrawing($id)
+	{
+		$roundData = Redis::hget('game:' . $id, 'roundData');
+		$roundData = json_decode($roundData, true);
+
+		$totalPoints = array_sum($roundData);
+
+		$points = round($totalPoints / (count($roundData) * 2));
+
+		$this->addPointsToUser($id, Redis::hget('game:' . $id, 'turn'), $points);
+	}
+
 	public function analyzeChatMessage($lobbyId, $user, $message)
 	{
 		$gameId = Redis::hget('lobby:' . $lobbyId, 'game_id');
@@ -222,18 +234,26 @@ class Drawonary extends Game
 		$remainingTime = $roundEnd->diffInSeconds($now);
 		$points = $remainingTime * 5 + 90;
 
-		$roundData->{$user} = $points;
-		$roundData = json_encode($roundData);
-
-		$scoreboard = new Scoreboard;
-		$scoreboard = $scoreboard->fromJson(Redis::hget('game:' . $id, 'scoreboard'))
-			->addPoints($user, $points)
-			->toJson();
-
-		Redis::hmset('game:' . $id, compact('scoreboard', 'roundData'));
+		$scoreboard = $this->addPointsToUser($id, $user, $points, $roundData);
 
 		$this->endTurnIfNeeded($id);
 
 		return event(new WordGuessed($id, $user, $now, $scoreboard));
+	}
+
+	protected function addPointsToUser($id, $user, $points, $roundData = null)
+	{
+		$roundData = ($roundData) ?: json_decode(Redis::hget('game:' . $id, 'roundData') ?? '{}');
+
+		$roundData->{$user} = $points;
+		$roundData = json_encode($roundData);
+
+		$scoreboard = (new Scoreboard)->fromJson(Redis::hget('game:' . $id, 'scoreboard'))
+			->addPoints($user, $points)
+			->toJson();
+
+		Redis::hmset('game:' . $id, compact('roundData', 'scoreboard'));
+
+		return $scoreboard;
 	}
 }
