@@ -101,6 +101,7 @@
 				.listen('Game\\Drawonary\\WordSelected', this.onWordSelected)
 				.listen('Game\\Drawonary\\TurnEnded', this.onTurnEnded)
 				.listen('Game\\Drawonary\\WordGuessed', this.onWordGuessed)
+				.listen('Game\\Drawonary\\RoundAdvanded', this.onRoundAdvanded)
 			},
 
 			onSelectingWord(e) {
@@ -146,6 +147,10 @@
 				})
 
 				this.applyScoreboardSorted(e.scoreboard)
+			},
+
+			onRoundAdvanced(e) {
+				this.round = e.round
 			},
 
 			closeGuess(e) {

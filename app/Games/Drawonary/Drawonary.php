@@ -2,6 +2,7 @@
 
 namespace App\Games\Drawonary;
 
+use App\Events\Game\Drawonary\RoundAdvanced;
 use App\Events\Game\Drawonary\SelectingWord;
 use App\Events\Game\Drawonary\WordGuessed;
 use App\Events\Game\Drawonary\WordSelected;
@@ -115,18 +116,7 @@ class Drawonary extends Game
 		$no = array_search($turn, $order);
 
 		if (++$no >= count($order)) {
-			$rounds = Redis::hget('game:' . $id, 'rounds');
-			$round = Redis::hget('game:' . $id, 'round');
-
-			$round++;
-
-			if ($round > $rounds) {
-				throw new \Exception('game ended (not yet implemented)');
-			}
-
-			Redis::hset('game:' . $id, 'round', $round);
-
-			$no = 0;
+			$no = $this->advanceRound($id);
 		}
 
 		$nextPlayer = $order[$no];
@@ -160,6 +150,24 @@ class Drawonary extends Game
 				'closeGuess' => $similarity,
 			];
 		}
+	}
+
+	protected function advanceRound($id)
+	{
+		$rounds = Redis::hget('game:' . $id, 'rounds');
+		$round = Redis::hget('game:' . $id, 'round');
+
+		$round++;
+
+		event(new RoundAdvanced($id, $round));
+
+		if ($round > $rounds) {
+			throw new \Exception('game ended (not yet implemented)');
+		}
+
+		Redis::hset('game:' . $id, 'round', $round);
+
+		return 0;
 	}
 
 	protected function endTurnIfNeeded($id)
