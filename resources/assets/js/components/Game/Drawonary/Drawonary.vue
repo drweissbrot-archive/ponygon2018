@@ -15,7 +15,9 @@
 				:turnEndsAt="turnEndsAt"
 				:endsAtIsSelection="endsAtIsSelection"
 				:turnEnded="turnEnded"
+				:gameEnded="gameEnded"
 				:selectingUser="selectingUser"
+				:lobby="lobbyId"
 				@wordSelected="selectWord">
 			</pg-draw-board>
 
@@ -56,6 +58,7 @@
 				selectingUser: false,
 
 				turnEnded: false,
+				gameEnded: false,
 
 				players: [],
 				order: []
@@ -101,7 +104,8 @@
 				.listen('Game\\Drawonary\\WordSelected', this.onWordSelected)
 				.listen('Game\\Drawonary\\TurnEnded', this.onTurnEnded)
 				.listen('Game\\Drawonary\\WordGuessed', this.onWordGuessed)
-				.listen('Game\\Drawonary\\RoundAdvanded', this.onRoundAdvanded)
+				.listen('Game\\Drawonary\\RoundAdvanced', this.onRoundAdvanced)
+				.listen('Game\\Drawonary\\GameEnded', this.onGameEnded)
 			},
 
 			onSelectingWord(e) {
@@ -134,8 +138,6 @@
 
 			onTurnEnded(e) {
 				this.turnEnded = e.addedPoints
-
-				console.log(e.addedPoints)
 			},
 
 			onWordGuessed(e) {
@@ -151,6 +153,12 @@
 
 			onRoundAdvanced(e) {
 				this.round = e.round
+			},
+
+			onGameEnded(e) {
+				this.gameEnded = true
+
+				this.applyScoreboardSorted(e.scoreboard)
 			},
 
 			closeGuess(e) {

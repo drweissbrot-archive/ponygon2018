@@ -51,7 +51,6 @@
 		},
 
 		destroyed() {
-			console.log('leaving')
 			Echo.leave('lobby:' + this.lobby)
 		},
 
