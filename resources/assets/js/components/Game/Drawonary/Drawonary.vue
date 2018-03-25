@@ -148,6 +148,8 @@
 					time: []
 				})
 
+				console.log('word guessed', e)
+
 				this.applyScoreboardSorted(e.scoreboard)
 			},
 
