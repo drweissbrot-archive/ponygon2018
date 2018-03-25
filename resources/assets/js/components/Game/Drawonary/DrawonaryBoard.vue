@@ -31,6 +31,7 @@
 	const drawingboard = require('./Drawingboard.vue')
 	const selectWordModal = require('./SelectWordModal.vue')
 
+	// values for remaining seconds that should be displayed in the canvas
 	const showAsBackground = [
 		60, 45, 30, 15, 7, 6, 5, 4, 3, 2, 1,
 	]
@@ -68,6 +69,10 @@
 
 			turnEndsAt: {
 				default: null
+			},
+
+			endsAtIsSelection: {
+				default: false
 			}
 		},
 
@@ -87,6 +92,8 @@
 					clearInterval(this.interval)
 					this.turnEndsAt = null
 				}
+
+				if (this.endsAtIsSelection) return
 
 				if (showAsBackground.includes(this.remaining)) {
 					this.backgroundRemaining = this.remaining

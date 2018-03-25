@@ -10,6 +10,7 @@
 				:turn="turn"
 				:action="action"
 				:turnEndsAt="turnEndsAt"
+				:endsAtIsSelection="endsAtIsSelection"
 				@wordSelected="selectWord">
 			</pg-draw-board>
 
@@ -20,6 +21,8 @@
 
 <script>
 	const axios = require('axios')
+	const moment = require('moment')
+
 	const board = require('./DrawonaryBoard.vue')
 
 	export default {
@@ -37,6 +40,7 @@
 				turn: null,
 				action: null,
 				turnEndsAt: null,
+				endsAtIsSelection: false,
 
 				players: []
 			}
@@ -74,7 +78,10 @@
 					// TODO is this order actually the right order?
 					this.players = order
 
-					this.onSelectingWord({user: this.turn})
+					this.onSelectingWord({
+						user: this.turn,
+						selectionEndsAt: moment().add(14, 'seconds').format()
+					})
 				})
 				.catch((err) => {
 					console.error(err)
@@ -96,15 +103,19 @@
 
 				let player = this.findPlayerById(e.user)
 
+				this.turnEndsAt = e.selectionEndsAt
+				this.endsAtIsSelection = true
 				this.turn = (player) ? player.name : 'someone'
 				this.action = 'selecting a word'
-				// TODO show "user is selecting" message
+				// TODO show "user is selecting" message as modal (?)
 			},
 
 			onWordSelected(e) {
 				this.wordLength = e.wordLength
 				this.action = 'drawing'
 				this.turnEndsAt = e.turnEndsAt
+				this.endsAtIsSelection = false
+				this.words = null
 			},
 
 			onTurnEnded(e) {
