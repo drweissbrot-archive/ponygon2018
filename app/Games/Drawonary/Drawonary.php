@@ -2,6 +2,7 @@
 
 namespace App\Games\Drawonary;
 
+use App\Events\Game\Drawonary\GameEnded;
 use App\Events\Game\Drawonary\RoundAdvanced;
 use App\Events\Game\Drawonary\SelectingWord;
 use App\Events\Game\Drawonary\WordGuessed;
@@ -162,7 +163,7 @@ class Drawonary extends Game
 		event(new RoundAdvanced($id, $round));
 
 		if ($round > $rounds) {
-			throw new \Exception('game ended (not yet implemented)');
+			return event(new GameEnded($id));
 		}
 
 		Redis::hset('game:' . $id, 'round', $round);

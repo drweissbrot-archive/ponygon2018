@@ -11,11 +11,13 @@
 				@wordSelected="$emit('wordSelected', $event)">
 			</pg-draw-select-word-modal>
 
-			<pg-draw-turn-ended-modal v-show="turnEnded"
+			<pg-draw-turn-ended-modal v-show="! gameEnded && turnEnded"
 				:addedPoints="turnEnded"
 				:players="players"></pg-draw-turn-ended-modal>
 
 			<pg-draw-selecting-word-modal v-show="selectingUser" :user="selectingUser"></pg-draw-selecting-word-modal>
+
+			<pg-draw-game-ended-modal v-if="gameEnded" :players="players" :lobby="lobby"></pg-draw-game-ended-modal>
 
 			<pg-draw-drawingboard :remaining="backgroundRemaining"></pg-draw-drawingboard>
 		</div>
@@ -53,7 +55,8 @@
 			'pg-draw-drawingboard': require('./Drawingboard.vue'),
 			'pg-draw-select-word-modal': require('./SelectWordModal.vue'),
 			'pg-draw-turn-ended-modal': require('./TurnEndedModal.vue'),
-			'pg-draw-selecting-word-modal': require('./SelectingWordModal.vue')
+			'pg-draw-selecting-word-modal': require('./SelectingWordModal.vue'),
+			'pg-draw-game-ended-modal': require('./GameEndedModal.vue')
 		},
 
 		data() {
@@ -106,6 +109,14 @@
 			},
 
 			players: {
+				required: true
+			},
+
+			gameEnded: {
+				default: false
+			},
+
+			lobby: {
 				required: true
 			}
 		},
