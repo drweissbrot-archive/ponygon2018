@@ -7,7 +7,7 @@
 
 		<div v-show="lobby.inviteLink" class="invite-wrap">
 			To invite people to join your lobby, send them this link:
-			<a :href="lobby.inviteLink" @click="copyInviteLink">
+			<a :href="lobby.inviteLink" @click.prevent="copyInviteLink">
 				{{ lobby.inviteLink }}
 			</a>
 		</div>
@@ -19,7 +19,7 @@
 				@changeLeader="changeLeader">
 			</pg-player-list>
 
-			<pg-chat></pg-chat>
+			<pg-chat ref="chat" :lobby="this.lobby.id" :players="players"></pg-chat>
 
 			<pg-game-select :players="players" :isLeader="currentPlayer.leader" @startGame="startGame"></pg-game-select>
 		</div>
@@ -27,11 +27,9 @@
 </template>
 
 <script>
-	const gameSelect = require('../../components/GameSelect.vue')
-
 	export default {
 		components: {
-			'pg-game-select': gameSelect
+			'pg-game-select': require('../../components/GameSelect.vue')
 		},
 
 		mounted() {
@@ -84,9 +82,7 @@
 				})
 			},
 
-			copyInviteLink(e) {
-				e.preventDefault()
-
+			copyInviteLink() {
 				//
 			},
 
@@ -116,6 +112,13 @@
 
 				// find out if current player is leader
 				this.currentPlayer.leader = (this.lobby.leader == this.currentPlayer.id)
+
+				this.$refs.chat.applyChatMessage({
+					user: this.lobby.leader,
+					message: 'is now lobby leader',
+					time: [],
+					isAction: true
+				})
 			},
 
 			changeLeader(id) {

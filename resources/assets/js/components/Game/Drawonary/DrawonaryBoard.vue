@@ -28,9 +28,6 @@
 <script>
 	const moment = require('moment')
 
-	const drawingboard = require('./Drawingboard.vue')
-	const selectWordModal = require('./SelectWordModal.vue')
-
 	// values for remaining seconds that should be displayed in the canvas
 	const showAsBackground = [
 		60, 45, 30, 15, 7, 6, 5, 4, 3, 2, 1,
@@ -38,8 +35,8 @@
 
 	export default {
 		components: {
-			'pg-draw-drawingboard': drawingboard,
-			'pg-draw-select-word-modal': selectWordModal
+			'pg-draw-drawingboard': require('./Drawingboard.vue'),
+			'pg-draw-select-word-modal': require('./SelectWordModal.vue')
 		},
 
 		data() {

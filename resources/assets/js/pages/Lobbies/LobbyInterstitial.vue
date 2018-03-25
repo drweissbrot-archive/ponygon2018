@@ -20,7 +20,7 @@
 					Create a Lobby and invite your friends to join
 				</p>
 
-				<button @click="createLobby">
+				<button @click.prevent="createLobby">
 					Create a Lobby
 				</button>
 			</div>
@@ -60,9 +60,7 @@
 				})
 			},
 
-			async createLobby(e) {
-				e.preventDefault()
-
+			async createLobby() {
 				await this.register()
 
 				axios.post('/lobby/create', {
