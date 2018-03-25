@@ -30,6 +30,8 @@ class StartWordSelection implements ShouldQueue
 	 */
 	public function handle()
 	{
+		\Log::notice('starting word selection');
+
 		Drawonary::advanceTurn($this->id);
 		Drawonary::generateWords($this->id);
 	}

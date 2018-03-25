@@ -13,9 +13,12 @@ class Scoreboard
 
 	public function addPlayer($player)
 	{
-		$this->players[] = new Player($player['name'], $player['id']);
+		$name = $player['name'];
+		$id = $player['id'];
+		$points = $player['points'] ?? 0;
+		$place = $player['place'] ?? null;
 
-		$this->updatePlacements();
+		$this->players[] = new Player($name, $id, $points, $place);
 
 		return $this;
 	}
@@ -32,6 +35,8 @@ class Scoreboard
 			return $player;
 		});
 
+		$this->updatePlacements();
+
 		return $this;
 	}
 
@@ -44,9 +49,9 @@ class Scoreboard
 		$place = 1;
 		$points = null;
 
-		$this->players->map(function ($player, $key) use ($place, $points) {
-			if ($key == 0) {
-				$player->place = 1;
+		$this->players->map(function ($player, $key) use (&$place, &$points) {
+			if ($points == null) {
+				$player->place = $place;
 				$points = $player->points;
 
 				return $player;
@@ -70,8 +75,14 @@ class Scoreboard
 		return $this->players->toJson();
 	}
 
-	public function getFirstPlayer()
+	public function fromJson($json)
 	{
-		//
+		$players = json_decode($json, true);
+
+		foreach ($players as $player) {
+			$this->addPlayer($player);
+		}
+
+		return $this;
 	}
 }

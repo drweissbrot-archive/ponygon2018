@@ -6,11 +6,16 @@
 			<pg-player-list :players="players"></pg-player-list>
 
 			<pg-draw-board :words="words"
+				:players="players"
+				:rounds="rounds"
+				:round="round"
 				:wordLength="wordLength"
 				:turn="turn"
 				:action="action"
 				:turnEndsAt="turnEndsAt"
 				:endsAtIsSelection="endsAtIsSelection"
+				:turnEnded="turnEnded"
+				:selectingUser="selectingUser"
 				@wordSelected="selectWord">
 			</pg-draw-board>
 
@@ -40,12 +45,20 @@
 				words: null,
 				wordLength: 0,
 
+				round: null,
+				rounds: null,
+
 				turn: null,
 				action: null,
 				turnEndsAt: null,
 				endsAtIsSelection: false,
 
-				players: []
+				selectingUser: false,
+
+				turnEnded: false,
+
+				players: [],
+				order: []
 			}
 		},
 
@@ -65,8 +78,12 @@
 					this.lobbyId = res.data.lobby_id
 					this.deck = res.data.deck
 					this.turn = res.data.turn
+					this.round = res.data.round
+					this.rounds = res.data.rounds
 
-					this.applyScoreboardSorted(JSON.parse(res.data.scoreboard), res.data.order.split(':'))
+					this.order = res.data.order.split(':')
+
+					this.applyScoreboardSorted(res.data.scoreboard)
 
 					this.onSelectingWord({
 						user: this.turn,
@@ -98,7 +115,11 @@
 				this.endsAtIsSelection = true
 				this.turn = (player) ? player.name : 'someone'
 				this.action = 'selecting a word'
-				// TODO show "user is selecting" message as modal (?)
+				this.turnEnded = false
+
+				if (player && player.id != window.user.id) {
+					this.selectingUser = this.turn
+				}
 			},
 
 			onWordSelected(e) {
@@ -107,10 +128,13 @@
 				this.turnEndsAt = e.turnEndsAt
 				this.endsAtIsSelection = false
 				this.words = null
+				this.selectingUser = false
 			},
 
 			onTurnEnded(e) {
-				//
+				this.turnEnded = e.addedPoints
+
+				console.log(e.addedPoints)
 			},
 
 			onWordGuessed(e) {
@@ -121,7 +145,7 @@
 					time: []
 				})
 
-				this.applyScoreboardSorted(e.scoreboard, this.players)
+				this.applyScoreboardSorted(e.scoreboard)
 			},
 
 			closeGuess(e) {
@@ -133,14 +157,21 @@
 				})
 			},
 
-			applyScoreboardSorted(scoreboard, order) {
-				for (let i = 0; i < order.length; i++) {
-					for (let j = 0; j < scoreboard.length; j++) {
-						if (scoreboard[j].id == order[i]) {
+			applyScoreboardSorted(scoreboard) {
+				scoreboard = JSON.parse(scoreboard)
+
+				let order = Object.assign({}, this.order)
+
+				for (let i in order) {
+					for (let j in scoreboard) {
+						if (order[i] == scoreboard[j].id) {
 							order[i] = scoreboard[j]
-							break
 						}
 					}
+
+					// for (let j = 0; j < scoreboard.length; j++) {
+					// 	order[i] = scoreboard[j]
+					// }
 				}
 
 				// TODO is this order actually the right order?
@@ -175,9 +206,9 @@
 			},
 
 			findPlayerById(id) {
-				for (let player of this.players) {
-					if (player.id === id) {
-						return player
+				for (let player in this.players) {
+					if (this.players[player].id === id) {
+						return this.players[player]
 					}
 				}
 			}

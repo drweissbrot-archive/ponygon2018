@@ -12,10 +12,11 @@ class Player
 
 	public $place;
 
-	public function __construct($name, $id, $points = 0)
+	public function __construct($name, $id, $points = 0, $place = null)
 	{
 		$this->name = $name;
 		$this->id = $id;
 		$this->points = $points;
+		$this->place = $place;
 	}
 }
