@@ -72,6 +72,10 @@
 				})
 				.then((res) => {
 					this.message = null
+
+					if (res.data.emitEventToParent) {
+						this.$emit('chatMessageAnalyzed', res.data)
+					}
 				})
 				.catch((err) => {
 					console.error(err)
@@ -91,10 +95,12 @@
 			},
 
 			applyChatMessage(e) {
+				let user = this.findPlayerById(e.user)
+				user = (user) ? user.name : ''
 
 				this.messages.push({
 					id: this.messages.length,
-					user: this.findPlayerById(e.user).name,
+					user,
 					message: e.message,
 					time: moment(e.time).format('MMM D, HH:mm:ss'),
 					isAction: e.isAction

@@ -2,8 +2,10 @@
 
 namespace App\Games\Lobby;
 
+use App\Events\Game\Lobby\ChatMessage;
 use App\Events\Game\Lobby\UserJoined;
 use Player;
+use Ponygon;
 use Redis;
 
 class Lobby
@@ -88,6 +90,17 @@ class Lobby
 		Player::authenticate($user, $auth);
 
 		abort_unless(Redis::hget('lobby:' . $id, 'leader') === $user, 403, 'You are not the lobby leader.');
+	}
+
+	public function sendChatMessage($id, $user, $message)
+	{
+		$game = Redis::hget('lobby:' . $id, 'game');
+
+		if (Ponygon::gameAnalyzesChatMessages($game)) {
+			return Ponygon::analyzeChatMessage($game, $id, $user, $message);
+		}
+
+		event(new ChatMessage($id, $user, $message, now()));
 	}
 
 	protected function markLeaderInPlayers($id, $users)
