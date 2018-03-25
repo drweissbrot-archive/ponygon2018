@@ -18,6 +18,7 @@
 				:gameEnded="gameEnded"
 				:selectingUser="selectingUser"
 				:lobby="lobbyId"
+				:drawing="drawing"
 				@wordSelected="selectWord">
 			</pg-draw-board>
 
@@ -51,6 +52,8 @@
 				rounds: null,
 
 				turn: null,
+				drawing: false,
+
 				action: null,
 				turnEndsAt: null,
 				endsAtIsSelection: false,
@@ -81,6 +84,7 @@
 					this.lobbyId = res.data.lobby_id
 					this.deck = res.data.deck
 					this.turn = res.data.turn
+					this.drawing = (res.data.turn == window.user.id)
 					this.round = res.data.round
 					this.rounds = res.data.rounds
 
@@ -119,6 +123,7 @@
 				this.turnEndsAt = e.selectionEndsAt
 				this.endsAtIsSelection = true
 				this.turn = (player) ? player.name : 'someone'
+				this.drawing = (player.id == window.user.id)
 				this.action = 'selecting a word'
 				this.turnEnded = false
 
