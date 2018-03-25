@@ -6,6 +6,8 @@ use App\Events\Game\Drawonary\SelectingWord;
 use App\Events\Game\Drawonary\WordSelected;
 use App\Events\Game\Lobby\GameStarted;
 use App\Games\Game;
+use App\Jobs\Game\Drawonary\ForceEndTurn;
+use App\Jobs\Game\Drawonary\RandomizeWordSelection;
 use App\Models\Drawonary\Deck;
 use Redis;
 
@@ -22,6 +24,8 @@ class Drawonary extends Game
 			'game' => 'draw',
 			'lobby_id' => $lobby,
 			'deck' => 'German',
+			'round' => 1,
+			'rounds' => 3,
 			'turn' => $firstPlayer,
 			'scoreboard' => $this->generateBlankScoreboard($lobby),
 			'order' => $order,
@@ -33,7 +37,8 @@ class Drawonary extends Game
 		$this->updateLobby($lobby, 'draw', $id);
 
 		event(new GameStarted($lobby, $id, 'drawonary'));
-		event(new SelectingWord($id, $firstPlayer));
+
+		$this->generateWords($id);
 	}
 
 	public function getLobbyFromGameId($id)
@@ -43,6 +48,8 @@ class Drawonary extends Game
 
 	public function generateWords($id)
 	{
+		Redis::hdel('game:' . $id, 'word');
+
 		$deck = Redis::hget('game:' . $id, 'deck');
 		$usedWords = Redis::hget('game:' . $id, 'usedWords');
 		$usedWords = explode(':', $usedWords);
@@ -57,10 +64,28 @@ class Drawonary extends Game
 		$usedWords = array_merge($usedWords, $words->toArray());
 		$usedWords = implode($usedWords, ':');
 
-		Redis::hmset('game:' . $id, [
-			'possibleWords' => implode($words->toArray(), ':'),
-			'usedWords' => $usedWords,
-		]);
+		$possibleWords = implode($words->toArray(), ':');
+
+		Redis::hmset('game:' . $id, compact('possibleWords', 'usedWords'));
+
+		$selectEndsAt = now()->addSeconds(15);
+
+		event(new SelectingWord($id, Redis::hget('game:' . $id, 'turn'), $selectEndsAt));
+
+		RandomizeWordSelection::dispatch($id, $possibleWords)
+			->delay($selectEndsAt);
+
+		return $words;
+	}
+
+	public function getGeneratedWords($id)
+	{
+		$words = Redis::hget('game:' . $id, 'possibleWords');
+		$words = explode(':', $words);
+
+		if (! count($words)) {
+			return $this->generateWords($id);
+		}
 
 		return $words;
 	}
@@ -70,8 +95,42 @@ class Drawonary extends Game
 		$turnEnd = now()->addSeconds(90)->format('c');
 
 		Redis::hmset('game:' . $id, compact('word', 'turnEnd'));
+		Redis::hdel('game:' . $id, 'possibleWords');
 
 		event(new WordSelected($id, mb_strlen($word), $turnEnd));
+
+		ForceEndTurn::dispatch($id, $word)->delay($turnEnd);
+	}
+
+	public function advanceTurn($id)
+	{
+		$turn = Redis::hget('game:' . $id, 'turn');
+
+		$order = Redis::hget('game:' . $id, 'order');
+		$order = explode(':', $order);
+
+		$no = array_search($turn, $order);
+
+		if (++$no >= count($order)) {
+			$rounds = Redis::hget('game:' . $id, 'rounds');
+			$round = Redis::hget('game:' . $id, 'round');
+
+			$round++;
+
+			if ($round > $rounds) {
+				throw new \Exception('game ended (not yet implemented)');
+			}
+
+			Redis::hset('game:' . $id, 'round', $round);
+
+			$no = 0;
+		}
+
+		$nextPlayer = $order[$no];
+
+		Redis::hset('game:' . $id, 'turn', $nextPlayer);
+
+		return $nextPlayer;
 	}
 
 	protected function getPlayerOrder($lobby)

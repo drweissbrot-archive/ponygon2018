@@ -38,14 +38,9 @@ class DrawonaryController extends Controller
 
 		Player::authenticate($user, $auth);
 
-		// TODO HIER FORTFAHREN
-		// Queue a job to automatically select a random word after x seconds
-		// https://laravel.com/docs/5.6/queues#delayed-dispatching
-
 		abort_unless(Redis::hget('game:' . $id, 'turn') === $user, 403, 'It is not your turn.');
-		abort_if(Redis::hget('game:' . $id, 'possibleWords'), 403, 'Word have already been requested.');
 
-		$words = Drawonary::generateWords($id);
+		$words = Drawonary::getGeneratedWords($id);
 
 		return compact('words');
 	}

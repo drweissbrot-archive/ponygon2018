@@ -16,16 +16,20 @@ class SelectingWord implements ShouldBroadcastNow
 
 	public $user;
 
+	public $selectionEndsAt;
+
 	/**
 	 * Create a new event instance.
 	 *
 	 * @param mixed $id
 	 * @param mixed $user
+	 * @param mixed $selectionEndsAt
 	 */
-	public function __construct($id, $user)
+	public function __construct($id, $user, $selectionEndsAt)
 	{
 		$this->id = $id;
 		$this->user = $user;
+		$this->selectionEndsAt = $selectionEndsAt;
 	}
 
 	/**
