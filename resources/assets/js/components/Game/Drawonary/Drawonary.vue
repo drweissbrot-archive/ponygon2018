@@ -171,7 +171,7 @@
 			},
 
 			onTurnEnded(e) {
-				this.turnEnded = e.addedPoints
+				this.turnEnded = JSON.parse(e.addedPoints)
 			},
 
 			onWordGuessed(e) {
