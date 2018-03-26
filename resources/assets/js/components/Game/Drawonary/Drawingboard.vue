@@ -53,29 +53,68 @@
 			canvasMouseDown(e) {
 				if (! this.drawing) return
 
-				const rect = canvas.getBoundingClientRect()
-
 				painting = true
 
-				ctx.beginPath()
-				ctx.moveTo(e.pageX - rect.left, e.pageY - rect.top)
+				const rect = canvas.getBoundingClientRect()
+				let x = e.pageX - rect.left
+				let y = e.pageY - rect.top
 
-				// draw a simple dot (useful when only clicking, not dragging)
-				ctx.lineTo(e.pageX - rect.left + 2, e.pageY - rect.top + 2)
-				ctx.stroke()
+				this.startDrawing(x, y)
+
+				this.$emit('startDrawing', {
+					x, y,
+				})
 			},
 
 			canvasMouseMove(e) {
 				if (! this.drawing || ! painting) return
 
 				const rect = canvas.getBoundingClientRect()
+				let x = e.pageX - rect.left
+				let y = e.pageY - rect.top
 
-				ctx.lineTo(e.pageX - rect.left, e.pageY - rect.top)
-				ctx.stroke()
+				this.continueDrawing(x, y)
+
+				this.$emit('continueDrawing', {
+					x, y,
+				})
 			},
 
 			canvasMouseUp() {
+				this.stopDrawing()
+
+				this.$emit('stopDrawing')
+			},
+
+			startDrawing(x, y, width, height) {
+				if (width) {
+					canvas.width = width
+				}
+
+				if (height) {
+					canvas.height = height
+				}
+
+				ctx.beginPath()
+				ctx.moveTo(x, y)
+
+				// draw a simple dot (useful when only clicking, not dragging)
+				ctx.lineTo(x + 2, y + 2)
+				ctx.stroke()
+			},
+
+			continueDrawing(x, y) {
+				ctx.lineTo(x, y)
+				ctx.stroke()
+			},
+
+			stopDrawing() {
 				painting = false
+			},
+
+			canvasDimensions(width, height) {
+				canvas.width = width
+				canvas.height = height
 			}
 		},
 
@@ -84,6 +123,18 @@
 				if (remaining === null) return
 
 				this.oldRemaining = remaining
+			},
+
+			drawing(drawing) {
+				if (! drawing) return
+
+				canvas.width = canvas.clientWidth
+				canvas.height = canvas.clientHeight
+
+				this.$emit('canvasDimensions', {
+					width: canvas.width,
+					height: canvas.height,
+				})
 			}
 		}
 	}

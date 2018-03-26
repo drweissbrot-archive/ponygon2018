@@ -5,7 +5,8 @@
 		<div class="grid --one-three-one-fifth">
 			<pg-player-list :players="players"></pg-player-list>
 
-			<pg-draw-board :words="words"
+			<pg-draw-board ref="board"
+				:words="words"
 				:players="players"
 				:rounds="rounds"
 				:round="round"
@@ -19,7 +20,11 @@
 				:selectingUser="selectingUser"
 				:lobby="lobbyId"
 				:drawing="drawing"
-				@wordSelected="selectWord">
+				@wordSelected="selectWord"
+				@startDrawing="startDrawing"
+				@continueDrawing="continueDrawing"
+				@stopDrawing="stopDrawing"
+				@canvasDimensions="canvasDimensions">
 			</pg-draw-board>
 
 			<pg-chat ref="chat"
@@ -34,6 +39,8 @@
 <script>
 	const axios = require('axios')
 	const moment = require('moment')
+
+	let drawingChannel
 
 	export default {
 		components: {
@@ -110,6 +117,12 @@
 				.listen('Game\\Drawonary\\WordGuessed', this.onWordGuessed)
 				.listen('Game\\Drawonary\\RoundAdvanced', this.onRoundAdvanced)
 				.listen('Game\\Drawonary\\GameEnded', this.onGameEnded)
+
+				drawingChannel = Echo.private('game:draw:' + this.id)
+				.listenForWhisper('startDrawing', this.onRemoteStartDrawing)
+				.listenForWhisper('continueDrawing', this.onRemoteContinueDrawing)
+				.listenForWhisper('stopDrawing', this.onRemoteStopDrawing)
+				.listenForWhisper('canvasDimensions', this.onRemoteCanvasDimensions)
 			},
 
 			onSelectingWord(e) {
@@ -152,8 +165,6 @@
 					isAction: true,
 					time: []
 				})
-
-				console.log('word guessed', e)
 
 				this.applyScoreboardSorted(e.scoreboard)
 			},
@@ -231,6 +242,40 @@
 						return this.players[player]
 					}
 				}
+			},
+
+			startDrawing(e) {
+				drawingChannel.whisper('startDrawing', e)
+			},
+
+			continueDrawing(e) {
+				drawingChannel.whisper('continueDrawing', e)
+			},
+
+			stopDrawing() {
+				drawingChannel.whisper('stopDrawing')
+			},
+
+			canvasDimensions(e) {
+				if (! drawingChannel) return
+
+				drawingChannel.whisper('canvasDimensions', e)
+			},
+
+			onRemoteStartDrawing(e) {
+				this.$refs.board.$refs.drawingboard.startDrawing(e.x, e.y)
+			},
+
+			onRemoteContinueDrawing(e) {
+				this.$refs.board.$refs.drawingboard.continueDrawing(e.x, e.y)
+			},
+
+			onRemoteStopDrawing(e) {
+				this.$refs.board.$refs.drawingboard.stopDrawing()
+			},
+
+			onRemoteCanvasDimensions(e) {
+				this.$refs.board.$refs.drawingboard.canvasDimensions(e.width, e.height)
 			}
 		}
 	}

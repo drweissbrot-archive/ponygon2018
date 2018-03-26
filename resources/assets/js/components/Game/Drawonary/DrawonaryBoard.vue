@@ -19,7 +19,15 @@
 
 			<pg-draw-game-ended-modal v-if="gameEnded" :players="players" :lobby="lobby"></pg-draw-game-ended-modal>
 
-			<pg-draw-drawingboard :drawing="drawing" :remaining="backgroundRemaining"></pg-draw-drawingboard>
+			<pg-draw-drawingboard
+				ref="drawingboard"
+				:drawing="drawing"
+				:remaining="backgroundRemaining"
+				@startDrawing="$emit('startDrawing', $event)"
+				@continueDrawing="$emit('continueDrawing', $event)"
+				@stopDrawing="$emit('stopDrawing')"
+				@canvasDimensions="$emit('canvasDimensions', $event)">
+			</pg-draw-drawingboard>
 		</div>
 
 		<div class="grid --two-one-two-fifths">
