@@ -159,9 +159,9 @@ class Drawonary extends Game
 		// the word is not guessed -- broadcast the message
 		event(new ChatMessage($lobbyId, $user, $message, now()));
 
-		$similarity = similar_text($word, $message);
+		similar_text($word, $message, $similarity);
 
-		if ($similarity > mb_strlen($word) - 2) {
+		if ($similarity >= 85) {
 			return [
 				'emitEventToParent' => true,
 				'word' => $message,
