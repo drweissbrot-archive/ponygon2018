@@ -43,6 +43,13 @@ return [
 			],
 		],
 
+		'production' => [
+			'driver' => 'stack',
+			'channels' => [
+				'single', 'discord_error',
+			],
+		],
+
 		'single' => [
 			'driver' => 'single',
 			'path' => storage_path('logs/laravel.log'),
