@@ -118,6 +118,10 @@ class Drawonary extends Game
 
 		if (++$no >= count($order)) {
 			$no = $this->advanceRound($id);
+
+			if ($no === false) {
+				return; // game has ended
+			}
 		}
 
 		$nextPlayer = $order[$no];
@@ -184,7 +188,9 @@ class Drawonary extends Game
 		event(new RoundAdvanced($id, $round));
 
 		if ($round > $rounds) {
-			return event(new GameEnded($id));
+			event(new GameEnded($id));
+
+			return false;
 		}
 
 		Redis::hset('game:' . $id, 'round', $round);
