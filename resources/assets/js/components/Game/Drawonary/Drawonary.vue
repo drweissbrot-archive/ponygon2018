@@ -1,6 +1,6 @@
 <template>
 	<div class="drawonary">
-		<h2>Donnerstagsmaler</h2>
+		<h2>{{ title }}</h2>
 
 		<div class="grid --one-three-one-fifth">
 			<pg-player-list :players="players"></pg-player-list>
@@ -11,6 +11,7 @@
 				:rounds="rounds"
 				:round="round"
 				:wordLength="wordLength"
+				:wordToGuess="wordToGuess"
 				:turn="turn"
 				:action="action"
 				:turnEndsAt="turnEndsAt"
@@ -53,6 +54,7 @@
 				lobbyId: null,
 
 				words: null,
+				wordToGuess: null,
 				wordLength: 0,
 
 				round: null,
@@ -71,16 +73,27 @@
 				gameEnded: false,
 
 				players: [],
-				order: []
+				order: [],
+
+				title: 'Donnerstagsmaler'
 			}
 		},
 
 		async mounted() {
+			this.updateTitle()
+
 			await this.getStatus()
 			this.subscribe()
 		},
 
 		methods: {
+			updateTitle() {
+				moment.locale('de')
+				this.title = moment().format('dddd') + 'smaler'
+
+				setTimeout(this.updateTitle, 120000)
+			},
+
 			getStatus() {
 				return axios.post('/play/draw/status/' + this.id, {
 					user: window.user.id,
@@ -146,12 +159,15 @@
 			},
 
 			onWordSelected(e) {
-				this.wordLength = e.wordLength
 				this.action = 'drawing'
 				this.turnEndsAt = e.turnEndsAt
 				this.endsAtIsSelection = false
 				this.words = null
 				this.selectingUser = false
+
+				if (this.turn != window.user.id || ! this.wordToGuess) {
+					this.wordLength = e.wordLength
+				}
 			},
 
 			onTurnEnded(e) {
@@ -229,6 +245,7 @@
 					word
 				})
 				.then((res) => {
+					this.wordToGuess = word
 					this.words = null
 				})
 				.catch((err) => {

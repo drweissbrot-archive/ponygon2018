@@ -133,8 +133,13 @@ class Drawonary extends Game
 		$roundData = json_decode($roundData, true);
 
 		$totalPoints = array_sum($roundData);
+		$correctGuesses = count($roundData);
 
-		$points = round($totalPoints / (count($roundData) * 2));
+		if ($correctGuesses == 0) {
+			return; // no-one guessed the word correctly -- no points for anyone
+		}
+
+		$points = round($totalPoints / ($correctGuesses * 2));
 
 		$this->addPointsToUser($id, Redis::hget('game:' . $id, 'turn'), $points);
 	}
