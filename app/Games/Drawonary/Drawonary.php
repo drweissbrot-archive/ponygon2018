@@ -132,6 +132,10 @@ class Drawonary extends Game
 		$roundData = Redis::hget('game:' . $id, 'roundData');
 		$roundData = json_decode($roundData, true);
 
+		if (! $roundData) {
+			return; // no-one has guessed the word correctly
+		}
+
 		$totalPoints = array_sum($roundData);
 		$correctGuesses = count($roundData);
 
