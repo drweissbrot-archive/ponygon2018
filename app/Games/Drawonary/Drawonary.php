@@ -97,12 +97,12 @@ class Drawonary extends Game
 
 	public function setWord($id, $word)
 	{
-		$turnEnd = now()->addSeconds(90)->format('c');
+		$turnEnd = now()->addSeconds(90);
 
 		Redis::hmset('game:' . $id, compact('word', 'turnEnd'));
 		Redis::hdel('game:' . $id, 'possibleWords');
 
-		event(new WordSelected($id, mb_strlen($word), $turnEnd));
+		event(new WordSelected($id, mb_strlen($word), $turnEnd->format('c')));
 
 		EndTurn::dispatch($id, $word)->delay($turnEnd);
 	}
