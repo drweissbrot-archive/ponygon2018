@@ -43,10 +43,6 @@
 			canvas.width = canvas.clientWidth
 
 			blankCanvas = canvas.toDataURL()
-
-			ctx.strokeStyle = 'black'
-			ctx.lineJoin = 'round'
-			ctx.lineWidth = 5
 		},
 
 		methods: {
@@ -115,6 +111,10 @@
 			canvasDimensions(width, height) {
 				canvas.width = width
 				canvas.height = height
+
+				ctx.strokeStyle = '#000'
+				ctx.lineJoin = 'round'
+				ctx.lineWidth = 5
 			}
 		},
 

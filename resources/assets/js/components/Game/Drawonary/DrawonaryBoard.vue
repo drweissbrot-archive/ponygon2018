@@ -1,8 +1,9 @@
 <template>
 	<div class="drawonary-board">
 		<h3 class="word-to-guess">
-			<span v-for="n in wordLength">_ </span>
+			<span v-if="! wordToGuess && wordLength" v-for="n in wordLength">_ </span>
 			<span v-if="! wordLength" class="no-word-length">.</span>
+			<span v-if="wordToGuess">{{ wordToGuess }}</span>
 		</h3>
 
 		<div class="board-and-modal-wrap">
@@ -82,6 +83,10 @@
 
 			wordLength: {
 				default: 0
+			},
+
+			wordToGuess: {
+				default: null
 			},
 
 			turn: {
