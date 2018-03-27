@@ -30,7 +30,12 @@ class StartWordSelection implements ShouldQueue
 	 */
 	public function handle()
 	{
-		Drawonary::advanceTurn($this->id);
+		$matchStillOngoing = Drawonary::advanceTurn($this->id);
+
+		if (! $matchStillOngoing) {
+			return; // match has ended
+		}
+
 		Drawonary::generateWords($this->id);
 	}
 }

@@ -120,7 +120,7 @@ class Drawonary extends Game
 			$no = $this->advanceRound($id);
 
 			if ($no === false) {
-				return; // game has ended
+				return false; // game has ended
 			}
 		}
 
