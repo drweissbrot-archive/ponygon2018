@@ -110,5 +110,7 @@ Route::group([
 		Route::post('/words/{id}', 'DrawonaryController@getWords')->name('words');
 
 		Route::post('/select/{id}', 'DrawonaryController@selectWord')->name('select');
+
+		Route::post('/get-word/{id}', 'DrawonaryController@getWord');
 	});
 });

@@ -65,4 +65,18 @@ class DrawonaryController extends Controller
 
 		Drawonary::setWord($id, $word);
 	}
+
+	public function getWord(Request $request, $id)
+	{
+		$user = $request->user;
+		$auth = $request->auth;
+
+		Player::authenticate($user, $auth);
+
+		abort_unless(Redis::hget('game:' . $id, 'turn') === $user, 403, 'It is not your turn.');
+
+		return [
+			'word' => Redis::hget('game:' . $id, 'word'),
+		];
+	}
 }
