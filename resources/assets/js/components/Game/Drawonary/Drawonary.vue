@@ -139,6 +139,9 @@
 			},
 
 			onSelectingWord(e) {
+				this.wordToGuess = null
+				this.wordLength = null
+
 				if (e.user == window.user.id) {
 					// current user is selecting word! PANIC!
 					this.getWords()
@@ -171,9 +174,12 @@
 			},
 
 			onTurnEnded(e) {
+				console.log(e.word)
 				this.turnEnded = JSON.parse(e.addedPoints)
 
 				this.applyScoreboardSorted(e.scoreboard)
+
+				this.wordToGuess = e.word
 			},
 
 			onWordGuessed(e) {

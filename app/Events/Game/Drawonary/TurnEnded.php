@@ -18,18 +18,22 @@ class TurnEnded implements ShouldBroadcastNow
 
 	public $scoreboard;
 
+	public $word;
+
 	/**
 	 * Create a new event instance.
 	 *
 	 * @param mixed $id
 	 * @param mixed $addedPoints
 	 * @param mixed $scoreboard
+	 * @param mixed $word
 	 */
-	public function __construct($id, $addedPoints, $scoreboard)
+	public function __construct($id, $addedPoints, $scoreboard, $word)
 	{
 		$this->id = $id;
 		$this->addedPoints = $addedPoints;
 		$this->scoreboard = $scoreboard;
+		$this->word = $word;
 	}
 
 	/**
