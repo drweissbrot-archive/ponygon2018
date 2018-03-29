@@ -16,7 +16,7 @@
 				:addedPoints="turnEnded"
 				:players="players"></pg-draw-turn-ended-modal>
 
-			<pg-draw-selecting-word-modal v-show="selectingUser" :user="selectingUser"></pg-draw-selecting-word-modal>
+			<pg-draw-selecting-word-modal v-show="selectingUser" :user="turnPlayer"></pg-draw-selecting-word-modal>
 
 			<pg-draw-game-ended-modal v-if="gameEnded" :players="players" :lobby="lobby"></pg-draw-game-ended-modal>
 
@@ -33,7 +33,7 @@
 
 		<div class="grid --two-one-two-fifths">
 			<p>
-				<strong>{{ turn }}</strong> is {{ action }}
+				<strong>{{ turnPlayer }}</strong> is {{ action }}
 			</p>
 
 			<p class="text-center">
@@ -72,7 +72,9 @@
 			return {
 				remaining: 0,
 				interval: null,
-				backgroundRemaining: null
+				backgroundRemaining: null,
+
+				turnPlayer: 'no-one'
 			}
 		},
 
@@ -143,6 +145,12 @@
 				this.updateRemainingTime()
 
 				this.interval = setInterval(this.updateRemainingTime, 500)
+			},
+
+			turn(turn) {
+				let player = this.findPlayerById(turn)
+
+				this.turnPlayer = (player) ? player.name : 'someone'
 			}
 		},
 
@@ -161,6 +169,14 @@
 					this.backgroundRemaining = this.remaining
 				} else {
 					this.backgroundRemaining = null
+				}
+			},
+
+			findPlayerById(id) {
+				for (let player in this.players) {
+					if (this.players[player].id === id) {
+						return this.players[player]
+					}
 				}
 			}
 		}

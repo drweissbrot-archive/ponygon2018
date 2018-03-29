@@ -147,16 +147,14 @@
 					this.getWords()
 				}
 
-				let player = this.findPlayerById(e.user)
-
 				this.turnEndsAt = e.selectionEndsAt
 				this.endsAtIsSelection = true
-				this.turn = (player) ? player.name : 'someone'
-				this.drawing = (player.id == window.user.id)
+				this.turn = e.user
+				this.drawing = (e.user == window.user.id)
 				this.action = 'selecting a word'
 				this.turnEnded = false
 
-				if (player && player.id != window.user.id) {
+				if (e.user != window.user.id) {
 					this.selectingUser = this.turn
 				}
 			},
@@ -167,6 +165,10 @@
 				this.endsAtIsSelection = false
 				this.words = null
 				this.selectingUser = false
+
+				if (this.turn == window.user.id && ! this.wordToGuess) {
+					return this.getWordToGuess()
+				}
 
 				if (this.turn != window.user.id || ! this.wordToGuess) {
 					this.wordLength = e.wordLength
@@ -222,12 +224,21 @@
 				})
 			},
 
+			getWordToGuess() {
+				axios.post('/play/draw/get-word/' + this.id, {
+					user: window.user.id,
+					auth: window.user.auth
+				})
+				.then((res) => {
+					this.wordToGuess = res.data.word
+				})
+				.catch((err) => {
+					console.error(err)
+				})
+			},
+
 			applyScoreboardSorted(scoreboard) {
-				console.log(scoreboard)
-
 				scoreboard = JSON.parse(scoreboard)
-
-				console.log(scoreboard)
 
 				let order = Object.assign({}, this.order)
 
