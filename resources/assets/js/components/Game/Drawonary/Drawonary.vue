@@ -172,6 +172,8 @@
 
 			onTurnEnded(e) {
 				this.turnEnded = JSON.parse(e.addedPoints)
+
+				this.applyScoreboardSorted(e.scoreboard)
 			},
 
 			onWordGuessed(e) {
@@ -182,7 +184,10 @@
 					time: []
 				})
 
-				this.applyScoreboardSorted(e.scoreboard)
+				// TODO not doing this after every guess prevents this
+				// scoreboard from overwriting the scoreboard from
+				// turnEnd -- find a nicer way to do this
+				// this.applyScoreboardSorted(e.scoreboard)
 			},
 
 			onRoundAdvanced(e) {
@@ -205,7 +210,11 @@
 			},
 
 			applyScoreboardSorted(scoreboard) {
+				console.log(scoreboard)
+
 				scoreboard = JSON.parse(scoreboard)
+
+				console.log(scoreboard)
 
 				let order = Object.assign({}, this.order)
 

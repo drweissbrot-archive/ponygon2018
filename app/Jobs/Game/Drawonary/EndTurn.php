@@ -49,7 +49,9 @@ class EndTurn implements ShouldQueue
 		Redis::hdel('game:' . $this->id, 'word');
 		Redis::hdel('game:' . $this->id, 'roundData');
 
-		event(new TurnEnded($this->id, $addedPoints));
+		$scoreboard = Redis::hget('game:' . $this->id, 'scoreboard');
+
+		event(new TurnEnded($this->id, $addedPoints, $scoreboard));
 
 		StartWordSelection::dispatch($this->id)
 			->delay(now()->addSeconds(5));
