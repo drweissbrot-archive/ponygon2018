@@ -180,6 +180,11 @@
 				this.applyScoreboardSorted(e.scoreboard)
 
 				this.wordToGuess = e.word
+
+				this.$refs.chat.applyChatMessage({
+					message: 'The word was ' + e.word + '!',
+					isAction: true
+				})
 			},
 
 			onWordGuessed(e) {

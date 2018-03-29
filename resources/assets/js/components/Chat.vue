@@ -94,7 +94,7 @@
 			},
 
 			applyChatMessage(e) {
-				let user = this.findPlayerById(e.user)
+				let user = e.user ? this.findPlayerById(e.user) : null
 				user = (user) ? user.name : ''
 
 				this.messages.push({
