@@ -85,6 +85,10 @@
 						time: [],
 						isAction: true
 					})
+
+					this.$nextTick(() => {
+						this.$refs.history.scrollTop = this.$refs.history.scrollHeight
+					})
 				})
 			},
 
