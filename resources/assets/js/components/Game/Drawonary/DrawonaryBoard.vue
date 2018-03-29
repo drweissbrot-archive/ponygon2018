@@ -12,7 +12,7 @@
 				@wordSelected="$emit('wordSelected', $event)">
 			</pg-draw-select-word-modal>
 
-			<pg-draw-turn-ended-modal v-show="! gameEnded && turnEnded"
+			<pg-draw-turn-ended-modal v-show="! gameEnded && turnEnded !== false"
 				:addedPoints="turnEnded"
 				:players="players"></pg-draw-turn-ended-modal>
 

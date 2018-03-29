@@ -174,7 +174,8 @@
 			},
 
 			onTurnEnded(e) {
-				console.log(e.word)
+				if (this.gameEnded) return
+
 				this.turnEnded = JSON.parse(e.addedPoints)
 
 				this.applyScoreboardSorted(e.scoreboard)
@@ -207,6 +208,7 @@
 
 			onGameEnded(e) {
 				this.gameEnded = true
+				this.turnEnded = false
 
 				this.applyScoreboardSorted(e.scoreboard)
 			},
