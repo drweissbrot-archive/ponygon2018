@@ -77,14 +77,14 @@
 					}
 				})
 				.catch((err) => {
-					console.error(err)
-
 					this.messages.push({
 						user: null,
 						message: 'Your message could not be posted',
 						time: [],
 						isAction: true
 					})
+
+					this.message = null
 
 					this.$nextTick(() => {
 						this.$refs.history.scrollTop = this.$refs.history.scrollHeight

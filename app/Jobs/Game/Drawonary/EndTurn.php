@@ -36,7 +36,9 @@ class EndTurn implements ShouldQueue
 	 */
 	public function handle()
 	{
-		if ($this->word && Redis::hget('game:' . $this->id, 'word') !== $this->word) {
+		$word = Redis::hget('game:' . $this->id, 'word');
+
+		if ($this->word && $word !== $this->word) {
 			// if current word doesn't match the word noted when the job was
 			// queued, a new turn has already begun
 			return;
@@ -51,7 +53,9 @@ class EndTurn implements ShouldQueue
 
 		$scoreboard = Redis::hget('game:' . $this->id, 'scoreboard');
 
-		event(new TurnEnded($this->id, $addedPoints, $scoreboard, $this->word));
+		\Log::debug($word);
+
+		event(new TurnEnded($this->id, $addedPoints, $scoreboard, $word));
 
 		StartWordSelection::dispatch($this->id)
 			->delay(now()->addSeconds(5));
