@@ -35,7 +35,7 @@
 				<strong>{{ turnPlayer }}</strong> is {{ action }}
 			</p>
 
-			<p class="text-center">
+			<p class="round">
 				<span v-if="round && rounds">
 					Round {{ round }} of {{ rounds }}
 				</span>
