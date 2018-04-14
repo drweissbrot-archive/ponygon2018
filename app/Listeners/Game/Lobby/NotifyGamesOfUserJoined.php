@@ -23,7 +23,7 @@ class NotifyGamesOfUserJoined
 		// find out if a game is running
 		$game = Redis::hget('lobby:' . $event->lobbyId, 'game');
 
-		if ($game == 'lobby' || ! in_aray($game, $this->games)) {
+		if ($game == 'lobby' || ! in_array($game, $this->games)) {
 			return;
 		}
 
