@@ -5,8 +5,8 @@
 		</div>
 
 		<canvas ref="canvas"
-			width="1280"
-			height="720"
+			width="800"
+			height="600"
 			@mousedown.prevent="canvasMouseDown"
 			@mousemove.prevent="canvasMouseMove"
 			@mouseup.prevent="canvasMouseUp">
@@ -39,16 +39,21 @@
 			canvas = this.$refs.canvas
 			ctx = canvas.getContext('2d')
 
-			canvas.width = canvas.clientWidth
-			canvas.height = canvas.clientHeight
+			canvas.width = 800
+			canvas.height = 800
+
+			this.canvasDimensions({
+				color: '#000',
+				strength: 5,
+			})
 
 			blankCanvas = canvas.toDataURL()
 
-			window.addEventListener('resize', this.onWindowResize)
+			document.addEventListener('mouseup', this.canvasMouseUp)
 		},
 
 		destroy() {
-			window.removeEventListener('resize', this.onWindowResize)
+			document.removeEventListener('mouseup', this.canvasMouseUp)
 		},
 
 		methods: {
@@ -59,7 +64,7 @@
 
 				const rect = canvas.getBoundingClientRect()
 				let x = e.pageX - rect.left
-				let y = e.pageY - rect.top
+				let y = e.pageY - rect.top - window.scrollY
 
 				this.startDrawing(x, y)
 
@@ -73,7 +78,7 @@
 
 				const rect = canvas.getBoundingClientRect()
 				let x = e.pageX - rect.left
-				let y = e.pageY - rect.top
+				let y = e.pageY - rect.top - window.scrollY
 
 				this.continueDrawing(x, y)
 
@@ -114,22 +119,14 @@
 				painting = false
 			},
 
-			canvasDimensions(width, height) {
-				canvas.width = width
-				canvas.height = height
-
-				console.log('canvas', canvas.width, width, canvas.height, height)
-
-				ctx.strokeStyle = '#000'
+			canvasDimensions(e) {
+				ctx.strokeStyle = e.color
 				ctx.lineJoin = 'round'
-				ctx.lineWidth = 5
+				ctx.lineWidth = e.strength
 			},
 
-			onWindowResize(e) {
-				if (! this.drawing) return
-
-				console.log('resize', e)
-				this.canvasDimensions(canvas.clientWidth, canvas.clientHeight)
+			clearCanvas() {
+				ctx.clearRect(0, 0, canvas.width, canvas.height)
 			}
 		},
 
