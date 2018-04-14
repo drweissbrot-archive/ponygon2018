@@ -26,7 +26,8 @@
 				@startDrawing="$emit('startDrawing', $event)"
 				@continueDrawing="$emit('continueDrawing', $event)"
 				@stopDrawing="$emit('stopDrawing')"
-				@canvasDimensions="$emit('canvasDimensions', $event)">
+				@canvasDimensions="$emit('canvasDimensions', $event)"
+				@clearCanvas="$emit('clearCanvas')">
 			</pg-draw-drawingboard>
 		</div>
 

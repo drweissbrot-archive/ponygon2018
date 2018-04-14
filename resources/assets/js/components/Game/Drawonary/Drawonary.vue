@@ -27,7 +27,8 @@
 				@startDrawing="startDrawing"
 				@continueDrawing="continueDrawing"
 				@stopDrawing="stopDrawing"
-				@canvasDimensions="canvasDimensions">
+				@canvasDimensions="canvasDimensions"
+				@clearCanvas="clearCanvas">
 			</pg-draw-board>
 
 			<div></div>
@@ -140,10 +141,16 @@
 				.listenForWhisper('continueDrawing', this.onRemoteContinueDrawing)
 				.listenForWhisper('stopDrawing', this.onRemoteStopDrawing)
 				.listenForWhisper('canvasDimensions', this.onRemoteCanvasDimensions)
+				.listenForWhisper('clearCanvas', this.$refs.board.$refs.drawingboard.clearCanvas())
 			},
 
 			onSelectingWord(e) {
 				this.$refs.board.$refs.drawingboard.clearCanvas()
+				this.$refs.board.$refs.drawingboard.canvasDimensions({
+					color: '#000',
+					weight: 5,
+				})
+
 				this.wordToGuess = null
 				this.wordLength = null
 
@@ -315,6 +322,10 @@
 				if (! drawingChannel) return
 
 				drawingChannel.whisper('canvasDimensions', e)
+			},
+
+			clearCanvas() {
+				drawingChannel.whisper('clearCanvas')
 			},
 
 			onRemoteStartDrawing(e) {

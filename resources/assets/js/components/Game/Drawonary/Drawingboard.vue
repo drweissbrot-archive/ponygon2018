@@ -11,6 +11,16 @@
 			@mousemove.prevent="canvasMouseMove"
 			@mouseup.prevent="canvasMouseUp">
 		</canvas>
+
+		<div class="toolbox">
+			<button class="draw --black" @click="setColor('#000')"><span></span></button>
+			<button class="draw --blue" @click="setColor('blue')"><span></span></button>
+			<button class="draw --green" @click="setColor('green')"><span></span></button>
+			<button class="draw --red" @click="setColor('red')"><span></span></button>
+			<button class="tool --eraser" @click="setColor('#fff')">eraser</button>
+			<button class="tool --fill" disabled>fill</button>
+			<button class="tool --clear" @click="clearCanvas">clear</button>
+		</div>
 	</div>
 </template>
 
@@ -125,8 +135,27 @@
 				ctx.lineWidth = e.strength
 			},
 
+			emitClearCanvas() {
+				if (! this.drawing) return
+
+				this.clearCanvas()
+
+				this.$emit('clearCanvas')
+			},
+
 			clearCanvas() {
 				ctx.clearRect(0, 0, canvas.width, canvas.height)
+			},
+
+			setColor(color) {
+				if (! this.drawing) return
+
+				ctx.strokeStyle = color
+
+				this.$emit('canvasDimensions', {
+					strength: 5,
+					color,
+				})
 			}
 		},
 
