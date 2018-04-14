@@ -20,8 +20,7 @@
 
 			<pg-draw-game-ended-modal v-if="gameEnded" :players="players" :lobby="lobby"></pg-draw-game-ended-modal>
 
-			<pg-draw-drawingboard
-				ref="drawingboard"
+			<pg-draw-drawingboard ref="drawingboard"
 				:drawing="drawing"
 				:remaining="backgroundRemaining"
 				@startDrawing="$emit('startDrawing', $event)"

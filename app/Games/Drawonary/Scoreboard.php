@@ -68,6 +68,8 @@ class Scoreboard
 
 			return $player;
 		});
+
+		return $this;
 	}
 
 	public function toJson()

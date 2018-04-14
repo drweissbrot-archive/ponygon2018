@@ -2,6 +2,7 @@
 
 namespace App\Events\Game\Drawonary;
 
+use App\Games\Drawonary\Scoreboard;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
@@ -27,7 +28,12 @@ class GameEnded implements ShouldBroadcastNow
 	{
 		$this->id = $id;
 
-		$this->scoreboard = Redis::hget('game:' . $id, 'scoreboard');
+		$scoreboard = Redis::hget('game:' . $id, 'scoreboard');
+		$scoreboard = (new Scoreboard)->fromJson($scoreboard)
+			->updatePlacements()
+			->toJson();
+
+		$this->scoreboard = $scoreboard;
 	}
 
 	/**

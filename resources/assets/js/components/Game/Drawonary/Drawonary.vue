@@ -2,8 +2,10 @@
 	<div class="drawonary">
 		<h2>{{ title }}</h2>
 
-		<div class="grid --one-three-one-fifth">
+		<div class="board-wrap">
 			<pg-player-list :players="players"></pg-player-list>
+
+			<div></div>
 
 			<pg-draw-board ref="board"
 				:words="words"
@@ -27,6 +29,8 @@
 				@stopDrawing="stopDrawing"
 				@canvasDimensions="canvasDimensions">
 			</pg-draw-board>
+
+			<div></div>
 
 			<pg-chat ref="chat"
 				:lobby="this.lobbyId"
@@ -139,6 +143,7 @@
 			},
 
 			onSelectingWord(e) {
+				this.$refs.board.$refs.drawingboard.clearCanvas()
 				this.wordToGuess = null
 				this.wordLength = null
 
@@ -325,7 +330,7 @@
 			},
 
 			onRemoteCanvasDimensions(e) {
-				this.$refs.board.$refs.drawingboard.canvasDimensions(e.width, e.height)
+				this.$refs.board.$refs.drawingboard.canvasDimensions(e)
 			}
 		}
 	}
