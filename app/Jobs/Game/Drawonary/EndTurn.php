@@ -53,8 +53,6 @@ class EndTurn implements ShouldQueue
 
 		$scoreboard = Redis::hget('game:' . $this->id, 'scoreboard');
 
-		\Log::debug($word);
-
 		event(new TurnEnded($this->id, $addedPoints, $scoreboard, $word));
 
 		StartWordSelection::dispatch($this->id)

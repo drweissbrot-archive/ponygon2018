@@ -147,7 +147,7 @@ class Drawonary extends Game
 			return; // no-one guessed the word correctly -- no points for anyone
 		}
 
-		$points = round($totalPoints / ($correctGuesses * 2));
+		$points = round(round($totalPoints / ($correctGuesses * 2)) / 10) * 10;
 
 		$this->addPointsToUser($id, Redis::hget('game:' . $id, 'turn'), $points);
 	}

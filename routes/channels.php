@@ -16,8 +16,5 @@
 // });
 
 Broadcast::channel('game:draw:{id}', function ($user, $id) {
-	// \Log::debug($user, $id);
-	//
-
 	return true;
 });
