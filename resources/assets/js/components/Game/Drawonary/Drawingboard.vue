@@ -39,10 +39,16 @@
 			canvas = this.$refs.canvas
 			ctx = canvas.getContext('2d')
 
-			canvas.height = canvas.clientHeight
 			canvas.width = canvas.clientWidth
+			canvas.height = canvas.clientHeight
 
 			blankCanvas = canvas.toDataURL()
+
+			window.addEventListener('resize', this.onWindowResize)
+		},
+
+		destroy() {
+			window.removeEventListener('resize', this.onWindowResize)
 		},
 
 		methods: {
@@ -112,9 +118,18 @@
 				canvas.width = width
 				canvas.height = height
 
+				console.log('canvas', canvas.width, width, canvas.height, height)
+
 				ctx.strokeStyle = '#000'
 				ctx.lineJoin = 'round'
 				ctx.lineWidth = 5
+			},
+
+			onWindowResize(e) {
+				if (! this.drawing) return
+
+				console.log('resize', e)
+				this.canvasDimensions(canvas.clientWidth, canvas.clientHeight)
 			}
 		},
 
@@ -128,13 +143,9 @@
 			drawing(drawing) {
 				if (! drawing) return
 
-				canvas.width = canvas.clientWidth
-				canvas.height = canvas.clientHeight
+				this.canvas = blankCanvas
 
-				this.$emit('canvasDimensions', {
-					width: canvas.width,
-					height: canvas.height,
-				})
+				this.canvasDimensions(canvas.clientWidth, canvas.clientHeight)
 			}
 		}
 	}
