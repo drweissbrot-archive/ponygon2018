@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -16,6 +17,8 @@ class AppServiceProvider extends ServiceProvider
 
 		Blade::component('components.input-group', 'inputgroup');
 		Blade::component('components.panel', 'panel');
+
+		Schema::defaultStringLength(191);
 	}
 
 	/**
