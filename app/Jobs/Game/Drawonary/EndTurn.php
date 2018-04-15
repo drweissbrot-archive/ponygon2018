@@ -48,6 +48,10 @@ class EndTurn implements ShouldQueue
 
 		$addedPoints = Redis::hget('game:' . $this->id, 'roundData');
 
+		$addedPoints = json_decode($addedPoints, true) ?? [];
+		arsort($addedPoints); // sort added points descending (most points on top)
+		$addedPoints = json_encode($addedPoints);
+
 		Redis::hdel('game:' . $this->id, 'word');
 		Redis::hdel('game:' . $this->id, 'roundData');
 

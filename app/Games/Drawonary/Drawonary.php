@@ -265,6 +265,7 @@ class Drawonary extends Game
 
 		$scoreboard = (new Scoreboard)->fromJson(Redis::hget('game:' . $id, 'scoreboard'))
 			->addPoints($user, $points)
+			->updatePlacements()
 			->toJson();
 
 		Redis::hmset('game:' . $id, compact('roundData', 'scoreboard'));
