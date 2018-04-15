@@ -143,7 +143,7 @@
 				.listenForWhisper('continueDrawing', this.onRemoteContinueDrawing)
 				.listenForWhisper('stopDrawing', this.onRemoteStopDrawing)
 				.listenForWhisper('canvasDimensions', this.onRemoteCanvasDimensions)
-				.listenForWhisper('clearCanvas', this.$refs.board.$refs.drawingboard.clearCanvas())
+				.listenForWhisper('clearCanvas', this.$refs.board.$refs.drawingboard.clearCanvas)
 			},
 
 			onSelectingWord(e) {

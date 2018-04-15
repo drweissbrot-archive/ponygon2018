@@ -19,7 +19,7 @@
 			<button class="draw --red" @click="setColor('red')"><span></span></button>
 			<button class="tool --eraser" @click="setColor('#fff')">eraser</button>
 			<button class="tool --fill" disabled>fill</button>
-			<button class="tool --clear" @click="clearCanvas">clear</button>
+			<button class="tool --clear" @click="emitClearCanvas">clear</button>
 		</div>
 	</div>
 </template>
