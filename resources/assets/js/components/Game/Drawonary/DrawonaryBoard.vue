@@ -18,7 +18,10 @@
 
 			<pg-draw-selecting-word-modal v-show="selectingUser" :user="turnPlayer"></pg-draw-selecting-word-modal>
 
-			<pg-draw-game-ended-modal v-if="gameEnded" :players="players" :lobby="lobby"></pg-draw-game-ended-modal>
+			<pg-draw-game-ended-modal v-if="gameEnded"
+				:players="endGameScoreboard"
+				:lobby="lobby">
+			</pg-draw-game-ended-modal>
 
 			<pg-draw-drawingboard ref="drawingboard"
 				:drawing="drawing"
@@ -73,6 +76,8 @@
 				remaining: 0,
 				interval: null,
 				backgroundRemaining: null,
+
+				gameEndedScoreboard: [],
 
 				turnPlayer: 'no-one'
 			}
@@ -137,6 +142,10 @@
 
 			drawing: {
 				default: false
+			},
+
+			endGameScoreboard: {
+				default: null
 			}
 		},
 
@@ -151,6 +160,20 @@
 				let player = this.findPlayerById(turn)
 
 				this.turnPlayer = (player) ? player.name : 'someone'
+			},
+
+			endGameScoreboard(endGameScoreboard) {
+				this.gameEndedScoreboard = []
+
+				for (let player of endGameScoreboard) {
+					let user = this.findPlayerById(player.id)
+
+					if (user) {
+						player.name = user.name
+					}
+
+					this.gameEndedScoreboard.push(player)
+				}
 			}
 		},
 

@@ -10,6 +10,7 @@
 			<pg-draw-board ref="board"
 				:words="words"
 				:players="players"
+				:endGameScoreboard="endGameScoreboard"
 				:rounds="rounds"
 				:round="round"
 				:wordLength="wordLength"
@@ -79,6 +80,7 @@
 
 				players: [],
 				order: [],
+				endGameScoreboard: null,
 
 				title: 'Donnerstagsmaler'
 			}
@@ -224,6 +226,7 @@
 				this.gameEnded = true
 				this.turnEnded = false
 
+				this.endGameScoreboard = JSON.parse(e.scoreboard)
 				this.applyScoreboardSorted(e.scoreboard)
 			},
 
