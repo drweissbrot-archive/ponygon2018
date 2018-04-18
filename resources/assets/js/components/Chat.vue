@@ -93,8 +93,9 @@
 			},
 
 			subscribe() {
-				Echo.channel('lobby:' + this.lobby)
-				.listen('Game\\Lobby\\ChatMessage', this.applyChatMessage)
+				// TODO
+				// Echo.channel('lobby:' + this.lobby)
+				// .listen('Game\\Lobby\\ChatMessage', this.applyChatMessage)
 			},
 
 			applyChatMessage(e) {

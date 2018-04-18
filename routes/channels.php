@@ -18,3 +18,17 @@
 Broadcast::channel('game:draw:{id}', function ($user, $id) {
 	return true;
 });
+
+Broadcast::channel('lobby:{id}', function ($user, $id) {
+	$user = request()->header('X-PONYGON-USER');
+	$auth = request()->header('X-PONYGON-AUTH');
+
+	if (! Lobby::verifyPlayerIsLobbyMember($id, $user, $auth, false)) {
+		return false;
+	}
+
+	return [
+		'id' => $user,
+		'name' => Redis::hget('player:' . $user, 'name'),
+	];
+});

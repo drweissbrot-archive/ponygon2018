@@ -87,7 +87,16 @@
 			},
 
 			subscribe() {
-				Echo.channel('lobby:' + this.lobby.id)
+				let channel = Echo.join('lobby:' + this.lobby.id)
+				.here((users) => {
+					console.log('here', users)
+				})
+				.joining((user) => {
+					console.log('joining', user)
+				})
+				.leaving((user) => {
+					console.log('leaving', user)
+				})
 				.listen('Game\\Lobby\\UserJoined', this.addPlayer)
 				.listen('Game\\Lobby\\LeaderChanged', this.updateLeader)
 				.listen('Game\\Lobby\\GameStarted', this.gameStarted)
