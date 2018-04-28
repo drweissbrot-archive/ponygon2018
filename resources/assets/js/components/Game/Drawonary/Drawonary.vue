@@ -219,7 +219,7 @@
 			},
 
 			onRoundAdvanced(e) {
-				this.round = e.round
+				this.round = (e.round > this.rounds) ? this.rounds : e.round
 			},
 
 			onGameEnded(e) {
