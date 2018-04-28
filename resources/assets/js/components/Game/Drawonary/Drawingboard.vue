@@ -8,8 +8,7 @@
 			width="800"
 			height="600"
 			@mousedown.prevent="canvasMouseDown"
-			@mousemove.prevent="canvasMouseMove"
-			@mouseup.prevent="canvasMouseUp">
+			@mousemove.prevent="canvasMouseMove">
 		</canvas>
 
 		<div class="toolbox">
@@ -98,6 +97,8 @@
 			},
 
 			canvasMouseUp() {
+				if (! painting) return
+
 				this.stopDrawing()
 
 				this.$emit('stopDrawing')
