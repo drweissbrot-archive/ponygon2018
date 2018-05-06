@@ -29,4 +29,25 @@ class PonygonRedisBroadcaster extends RedisBroadcaster
 			$request, $channelName
 		);
 	}
+
+	/**
+	 * Return the valid authentication response.
+	 *
+	 * @param \Illuminate\Http\Request $request
+	 * @param mixed                    $result
+	 *
+	 * @return mixed
+	 */
+	public function validAuthenticationResponse($request, $result)
+	{
+		if (is_bool($result)) {
+			return json_encode($result);
+		}
+
+		return json_encode([
+			'channel_data' => [
+				'user_info' => $result,
+			],
+		]);
+	}
 }

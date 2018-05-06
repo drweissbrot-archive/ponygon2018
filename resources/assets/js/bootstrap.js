@@ -29,5 +29,14 @@ window.io = require('socket.io-client')
 window.Echo = new Echo({
 	broadcaster: 'socket.io',
 	host: window.location.hostname + ':8443',
-	encrypted: true
+	encrypted: true,
+	csrfToken: token.content,
+	auth: {
+		headers: {
+			'X-PONYGON-USER': 'user',
+			'X-PONYGON-AUTH': 'auth',
+		}
+	}
 })
+
+window.socketId = window.Echo.socketId()

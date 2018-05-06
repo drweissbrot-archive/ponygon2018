@@ -2,8 +2,8 @@
 
 namespace App\Events\Game\Lobby;
 
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -35,6 +35,6 @@ class LeaderChanged implements ShouldBroadcastNow
 	 */
 	public function broadcastOn()
 	{
-		return new Channel('lobby:' . $this->lobbyId);
+		return new PresenceChannel('lobby:' . $this->lobbyId);
 	}
 }

@@ -86,6 +86,8 @@
 				})
 				.then((res) => {
 					window.user = res.data
+					window.Echo.options.auth.headers['X-PONYGON-USER'] = res.data.id
+					window.Echo.options.auth.headers['X-PONYGON-AUTH'] = res.data.auth
 
 					axios.post('/lobby/join/' + this.$route.params.lobby, {
 						user: window.user.id,
