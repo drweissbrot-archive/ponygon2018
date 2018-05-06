@@ -1,10 +1,10 @@
 <template>
-	<div class="chat-message" :class="{'--action': isAction}">
-		<div class="name" :data-message-datetime="time">
+	<div class="chat-message" :class="{'--action': isAction, '--spacer': spacer}">
+		<div class="name" :data-message-datetime="time" v-if="! spacer">
 			{{ name }}
 		</div>
 
-		<div class="message">
+		<div class="message" v-if="! spacer">
 			{{ message }}
 		</div>
 	</div>
@@ -26,6 +26,10 @@
 			},
 
 			isAction: {
+				default: false
+			},
+
+			spacer: {
 				default: false
 			}
 		}

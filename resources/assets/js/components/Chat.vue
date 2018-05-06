@@ -9,7 +9,8 @@
 					:name="message.user"
 					:message="message.message"
 					:time="message.time"
-					:isAction="message.isAction">
+					:isAction="message.isAction"
+					:spacer="message.spacer">
 				</pg-chat-message>
 			</div>
 
@@ -99,13 +100,27 @@
 			},
 
 			subscribe() {
-				Echo.channel('lobby:' + this.lobby)
+				Echo.join('lobby:' + this.lobby)
+				.joining((user) => {
+					this.applyChatMessage({
+						user: user.name,
+						message: 'joined',
+						isAction: true
+					})
+				})
+				.leaving((user) => {
+					this.applyChatMessage({
+						user: user.name,
+						message: 'left',
+						isAction: true
+					})
+				})
 				.listen('Game\\Lobby\\ChatMessage', this.applyChatMessage)
 			},
 
 			applyChatMessage(e) {
 				let user = e.user ? this.findPlayerById(e.user) : null
-				user = (user) ? user.name : ''
+				user = (user) ? user.name : e.user
 
 				this.messages.push({
 					id: this.messages.length,
@@ -113,6 +128,16 @@
 					message: e.message,
 					time: moment(e.time).format('MMM D, HH:mm:ss'),
 					isAction: e.isAction
+				})
+
+				this.$nextTick(() => {
+					this.$refs.history.scrollTop = this.$refs.history.scrollHeight
+				})
+			},
+
+			applySpacer() {
+				this.messages.push({
+					spacer: true
 				})
 
 				this.$nextTick(() => {

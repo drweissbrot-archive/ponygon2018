@@ -202,6 +202,8 @@
 					message: 'The word was ' + e.word + '!',
 					isAction: true
 				})
+
+				this.$refs.chat.applySpacer()
 			},
 
 			onWordGuessed(e) {
