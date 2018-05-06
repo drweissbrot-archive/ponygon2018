@@ -12,9 +12,7 @@ class Lobby
 {
 	public function createLobby($user, $auth)
 	{
-
-		// TODO uncomment
-		// Player::authenticate($user, $auth);
+		Player::authenticate($user, $auth);
 
 		$id = $this->getId();
 

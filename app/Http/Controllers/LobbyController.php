@@ -38,20 +38,18 @@ class LobbyController extends Controller
 		$user = $request->user;
 		$auth = $request->auth;
 
-		// TODO uncomment
-		// Player::authenticate($user, $auth);
+		Player::authenticate($user, $auth);
 
-		// if (Lobby::verifyPlayerIsLobbyMember($id, $user, $auth, false)) {
-		// 	abort(403, 'You are already a member of this lobby.');
-		// }
+		if (Lobby::verifyPlayerIsLobbyMember($id, $user, $auth, false)) {
+			abort(403, 'You are already a member of this lobby.');
+		}
 
 		Lobby::join($id, $user);
 	}
 
 	public function status(Request $request, $id)
 	{
-		// TODO uncomment
-		// Lobby::verifyPlayerIsLobbyMember($id, $request->user, $request->auth);
+		Lobby::verifyPlayerIsLobbyMember($id, $request->user, $request->auth);
 
 		$lobby = Redis::hgetall('lobby:' . $id);
 
