@@ -155,6 +155,9 @@ class Drawonary extends Game
 	public function analyzeChatMessage($lobbyId, $user, $message)
 	{
 		$gameId = Redis::hget('lobby:' . $lobbyId, 'game_id');
+
+		$this->cancelIfUserGuessedWordAlready($gameId, $user, 'You may not post chat messages after guessing the word.');
+
 		$word = Redis::hget('game:' . $gameId, 'word');
 
 		$word = trim(mb_strtolower($word));
@@ -239,8 +242,7 @@ class Drawonary extends Game
 	{
 		abort_if(Redis::hget('game:' . $id, 'turn') == $user, 403, 'You may not guess the word while drawing.');
 
-		$roundData = json_decode(Redis::hget('game:' . $id, 'roundData') ?? '{}');
-		abort_if($roundData->{$user} ?? false, 403, 'You have already guessed the word.');
+		$roundData = $this->cancelIfUserGuessedWordAlready($id, $user);
 
 		$now = now();
 		$roundEnd = Redis::hget('game:' . $id, 'turnEnd');
@@ -271,5 +273,14 @@ class Drawonary extends Game
 		Redis::hmset('game:' . $id, compact('roundData', 'scoreboard'));
 
 		return $scoreboard;
+	}
+
+	protected function cancelIfUserGuessedWordAlready($gameId, $user, $message = 'You have already guessed the word.')
+	{
+		$roundData = json_decode(Redis::hget('game:' . $gameId, 'roundData') ?? '{}');
+
+		abort_if($roundData->{$user} ?? false, 403, $message);
+
+		return $roundData;
 	}
 }

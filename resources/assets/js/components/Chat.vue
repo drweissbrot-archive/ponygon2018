@@ -77,9 +77,15 @@
 					}
 				})
 				.catch((err) => {
+					let message =
+						(err.response.data.message == 'You may not post chat messages after guessing the word.')
+						? 'You may not post chat messages after guessing the word.'
+						: 'Your message could not be posted'
+
+
 					this.messages.push({
 						user: null,
-						message: 'Your message could not be posted',
+						message,
 						time: [],
 						isAction: true
 					})
