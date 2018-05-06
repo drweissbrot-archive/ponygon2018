@@ -137,6 +137,7 @@
 				.listen('Game\\Drawonary\\WordGuessed', this.onWordGuessed)
 				.listen('Game\\Drawonary\\RoundAdvanced', this.onRoundAdvanced)
 				.listen('Game\\Drawonary\\GameEnded', this.onGameEnded)
+				.listen('Game\\Drawonary\\ShowLetter', this.onShowLetter)
 
 				drawingChannel = Echo.private('game:draw:' + this.id)
 				.listenForWhisper('startDrawing', this.onRemoteStartDrawing)
@@ -230,6 +231,10 @@
 
 				this.endGameScoreboard = JSON.parse(e.scoreboard)
 				this.applyScoreboardSorted(e.scoreboard)
+			},
+
+			onShowLetter(e) {
+				this.$refs.board.showLetter(e.position, e.letter)
 			},
 
 			closeGuess(e) {

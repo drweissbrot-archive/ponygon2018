@@ -12,6 +12,7 @@ use App\Events\Game\Lobby\GameStarted;
 use App\Games\Game;
 use App\Jobs\Game\Drawonary\EndTurn;
 use App\Jobs\Game\Drawonary\RandomizeWordSelection;
+use App\Jobs\Game\Drawonary\ShowLetter;
 use App\Models\Drawonary\Deck;
 use Illuminate\Support\Carbon;
 use Redis;
@@ -105,6 +106,13 @@ class Drawonary extends Game
 		event(new WordSelected($id, mb_strlen($word), $turnEnd->format('c')));
 
 		EndTurn::dispatch($id, $word)->delay($turnEnd);
+
+		ShowLetter::dispatch($id, $word)->delay($turnEnd->subSeconds(60));
+		ShowLetter::dispatch($id, $word)->delay($turnEnd->subSeconds(30));
+
+		if (mb_strlen($word) > 5) {
+			ShowLetter::dispatch($id, $word)->delay($turnEnd->subSeconds(10));
+		}
 	}
 
 	public function advanceTurn($id)

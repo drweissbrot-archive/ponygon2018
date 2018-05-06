@@ -1,7 +1,10 @@
 <template>
 	<div class="drawonary-board">
 		<h3 class="word-to-guess">
-			<span v-if="! wordToGuess && wordLength" v-for="n in wordLength">_ </span>
+			<span v-if="! wordToGuess && wordLength" v-for="n in wordLength">
+				<span v-if="knownLetters[n]">{{ knownLetters[n] }} </span>
+				<span v-else>_ </span>
+			</span>
 			<span v-if="! wordLength" class="no-word-length">.</span>
 			<span v-if="wordToGuess">{{ wordToGuess }}</span>
 		</h3>
@@ -79,7 +82,9 @@
 
 				gameEndedScoreboard: [],
 
-				turnPlayer: 'no-one'
+				turnPlayer: 'no-one',
+
+				knownLetters: {}
 			}
 		},
 
@@ -193,6 +198,10 @@
 				} else {
 					this.backgroundRemaining = null
 				}
+			},
+
+			showLetter(position, letter) {
+				this.knownLetters[position] = letter
 			},
 
 			findPlayerById(id) {
