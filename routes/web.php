@@ -113,4 +113,13 @@ Route::group([
 
 		Route::post('/get-word/{id}', 'DrawonaryController@getWord');
 	});
+
+	Route::group([
+		'prefix' => 'c4',
+		'as' => 'c4.',
+	], function () {
+		Route::post('/status/{id}', 'ConnectFourController@status')->name('status');
+
+		Route::post('/move/{id}', 'ConnectFourController@makeMove')->name('move');
+	});
 });

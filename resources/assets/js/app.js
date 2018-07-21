@@ -32,6 +32,11 @@ const routes = [
 		path: '/play/drawonary/:id',
 		component: require('./components/Game/Drawonary/Drawonary.vue'),
 		name: 'play.drawonary'
+	},
+	{
+		path: '/play/c4/:id',
+		component: require('./components/Game/ConnectFour/ConnectFour.vue'),
+		name: 'play.connectfour'
 	}
 ]
 

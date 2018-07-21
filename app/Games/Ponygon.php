@@ -3,11 +3,13 @@
 namespace App\Games;
 
 use App\Facades\Games\Drawonary;
+use App\Facades\Games\ConnectFour;
 
 class Ponygon
 {
 	protected $games = [
 		'draw' => Drawonary::class,
+		'c4' => ConnectFour::class,
 	];
 
 	public function startGame($game, $lobby)

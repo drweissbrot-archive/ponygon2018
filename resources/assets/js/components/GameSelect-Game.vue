@@ -13,7 +13,7 @@
 			</p>
 		</div>
 
-		<button :disabled="! isLeader" @click="$emit('startGame')">Play</button>
+		<button :disabled="! isLeader || game.disabled" @click="$emit('startGame')">Play</button>
 	</div>
 </template>
 

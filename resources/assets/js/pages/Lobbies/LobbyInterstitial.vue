@@ -10,6 +10,12 @@
 			<input type="text" placeholder="Enter your username..." v-model="name">
 		</div>
 
+		<p style="font-weight:bold;margin-top:2rem">
+			Please note that Ponygon is still quite early in development.
+			A lot of features are still missing or buggy.
+			You can <a href="https://github.com/drweissbrot/ponygon" target="_blank">contribute on GitHub</a> if you want to help out.
+		</p>
+
 		<div class="grid --halves">
 			<div>
 				<h3>

@@ -1,14 +1,22 @@
 {
 	"tictactoe": {
 		"shortname": "ttt",
-		"description": "A short game of classic Tic Tac Toe.",
+		"description": "A short game of classic Tic Tac Toe. Currently unavailable.",
 		"title": "Tic Tac Toe",
-		"maxPlayers": 2
+		"maxPlayers": 2,
+		"disabled": true
 	},
 
 	"drawonary": {
 		"shortname": "draw",
 		"description": "Guess the word that is being drawn.",
 		"title": "Donnerstagsmaler"
+	},
+
+	"connectfour": {
+		"shortname": "c4",
+		"description": "Like Tic Tac Toe, but harder.",
+		"title": "Connect Four",
+		"maxplayers": 2
 	}
 }

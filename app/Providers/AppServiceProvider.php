@@ -30,8 +30,10 @@ class AppServiceProvider extends ServiceProvider
 			'ponygon' => \App\Games\Ponygon::class,
 			'lobby' => \App\Games\Lobby\Lobby::class,
 			'player' => \App\Games\Lobby\Player::class,
+
 			'ticTacToe' => \App\Games\TicTacToe\TicTacToe::class,
 			'drawonary' => \App\Games\Drawonary\Drawonary::class,
+			'connectfour' => \App\Games\ConnectFour\ConnectFour::class,
 		];
 
 		foreach ($facades as $facade => $class) {
