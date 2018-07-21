@@ -10,5 +10,12 @@
 		"shortname": "draw",
 		"description": "Guess the word that is being drawn.",
 		"title": "Donnerstagsmaler"
+	},
+
+	"connectfour": {
+		"shortname": "c4",
+		"description": "Like Tic Tac Toe, but harder.",
+		"title": "Connect Four",
+		"maxplayers": 2
 	}
 }

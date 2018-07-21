@@ -47,11 +47,6 @@ class Drawonary extends Game
 		$this->generateWords($id);
 	}
 
-	public function getLobbyFromGameId($id)
-	{
-		return Redis::hget('game:' . $id, 'lobby_id');
-	}
-
 	public function generateWords($id)
 	{
 		Redis::hdel('game:' . $id, 'word');

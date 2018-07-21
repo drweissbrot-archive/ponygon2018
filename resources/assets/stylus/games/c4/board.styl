@@ -1,0 +1,33 @@
+.board-wrap {
+	display grid
+	grid-template-columns calc((100% - 800px) / 2 - 4rem) 4rem 800px 4rem calc((100% - 800px) / 2 - 4rem)
+}
+
+.board {
+	.row {
+		display flex
+		justify-content center
+		align-items center
+
+		.node {
+			width 8rem
+			height 8rem
+
+			display flex
+			justify-content center
+			align-items center
+
+			&:not(:last-child) {
+				border-right 1px solid #fff
+			}
+
+			span {
+				pointer-events none
+			}
+		}
+
+		&:not(:last-child) .node {
+			border-bottom 1px solid #fff
+		}
+	}
+}

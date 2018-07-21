@@ -5,12 +5,17 @@ return PhpCsFixer\Config::create()
 	->setIndent("\t")
 	->setRules([
 		'align_multiline_comment' => ['comment_type' => 'all_multiline'],
+		'array_indentation' => true,
 		'array_syntax' => ['syntax' => 'short'],
 		'backtick_to_shell_exec' => true,
 		'binary_operator_spaces' => true,
 		'blank_line_after_namespace' => true,
 		'blank_line_after_opening_tag' => true,
-		'blank_line_before_statement' => ['statements' => ['continue', 'declare', 'return', 'throw', 'try']],
+		'blank_line_before_statement' => [
+			'statements' => [
+				'continue', 'declare', 'return', 'throw', 'try', 'if', 'goto',
+			],
+		],
 		'braces' => true,
 		'cast_spaces' => true,
 		'class_attributes_separation' => true,
@@ -19,16 +24,19 @@ return PhpCsFixer\Config::create()
 		'combine_consecutive_unsets' => true,
 		'concat_space' => ['spacing' => 'one'],
 		'declare_equal_normalize' => ['space' => 'single'],
+		'dir_constant' => true,
 		'doctrine_annotation_array_assignment' => true,
 		'doctrine_annotation_braces' => true,
 		'doctrine_annotation_indentation' => true,
 		'doctrine_annotation_spaces' => true,
+		'elseif' => true,
 		'encoding' => true,
 		'ereg_to_preg' => true,
 		'escape_implicit_backslashes' => true,
 		'explicit_indirect_variable' => true,
 		'explicit_string_variable' => true,
 		'full_opening_tag' => true,
+		'fully_qualified_strict_types' => true,
 		'function_declaration' => true,
 		'function_to_constant' => true,
 		'function_typehint_space' => true,
@@ -39,18 +47,24 @@ return PhpCsFixer\Config::create()
 		'line_ending' => true,
 		'linebreak_after_opening_tag' => true,
 		'list_syntax' => ['syntax' => 'short'],
+		'logical_operators' => true,
 		'lowercase_cast' => true,
 		'lowercase_constants' => true,
 		'lowercase_keywords' => true,
+		'lowercase_static_reference' => true,
 		'magic_constant_casing' => true,
 		'mb_str_functions' => true,
 		'method_argument_space' => true,
 		'method_chaining_indentation' => true,
+		'method_separation' => true,
 		'modernize_types_casting' => true,
 		'multiline_comment_opening_closing' => true,
 		'multiline_whitespace_before_semicolons' => true,
+		'native_constant_invocation' => true,
 		'native_function_casing' => true,
+		'native_function_invocation' => false,
 		'no_alias_functions' => true,
+		'no_binary_string' => true,
 		'no_blank_lines_after_class_opening' => true,
 		'no_blank_lines_after_phpdoc' => true,
 		'no_break_comment' => true,
@@ -72,11 +86,13 @@ return PhpCsFixer\Config::create()
 		'no_spaces_around_offset' => true,
 		'no_spaces_inside_parenthesis' => true,
 		'no_superfluous_elseif' => true,
+		'no_superfluous_phpdoc_tags' => true,
 		'no_trailing_comma_in_list_call' => true,
 		'no_trailing_comma_in_singleline_array' => true,
 		'no_trailing_whitespace' => true,
 		'no_trailing_whitespace_in_comment' => true,
 		'no_unneeded_control_parentheses' => true,
+		'no_unneeded_curly_braces' => true,
 		'no_unneeded_final_method' => true,
 		'no_unreachable_default_argument_value' => true,
 		'no_unused_imports' => true,
@@ -120,19 +136,24 @@ return PhpCsFixer\Config::create()
 		'pow_to_exponentiation' => true,
 		'psr4' => true,
 		'random_api_migration' => true,
+		'return_assignment' => true,
 		'return_type_declaration' => ['space_before' => 'one'],
 		'self_accessor' => true,
 		'semicolon_after_instruction' => true,
+		'set_type_to_cast' => true,
 		'short_scalar_cast' => true,
 		'simplified_null_return' => true,
 		'single_blank_line_at_eof' => true,
 		'single_blank_line_before_namespace' => true,
 		'single_class_element_per_statement' => true,
+		'single_import_per_statement' => true,
 		'single_line_after_imports' => true,
 		'single_line_comment_style' => true,
 		'single_quote' => true,
 		'space_after_semicolon' => true,
+		'standardize_increment' => true,
 		'standardize_not_equals' => true,
+		'string_line_ending' => true,
 		'switch_case_semicolon_to_colon' => true,
 		'switch_case_space' => true,
 		'ternary_operator_spaces' => true,
@@ -143,11 +164,8 @@ return PhpCsFixer\Config::create()
 		'visibility_required' => true,
 		'whitespace_after_comma_in_array' => true,
 		'yoda_style' => ['equal' => false, 'identical' => false, 'less_and_greater' => false],
-	])
-	->setFinder(
-		PhpCsFixer\Finder::create()
-			->exclude('vendor')
-			->in(__DIR__)
+	])->setFinder(
+		PhpCsFixer\Finder::create()->exclude('vendor')->in(__DIR__)
 	);
 
 /*
@@ -160,6 +178,7 @@ whitespace:
 fixers:
   align_multiline_comment:
 	comment_type: all_multiline
+  array_indentation: true
   array_syntax:
 	syntax: short
   backtick_to_shell_exec: true
@@ -173,6 +192,8 @@ fixers:
 	  - return
 	  - throw
 	  - try
+	  - if
+	  - goto
   braces: true
   cast_spaces: true
   class_attributes_separation: true
@@ -183,16 +204,19 @@ fixers:
 	spacing: one
   declare_equal_normalize:
 	space: single
+  dir_constant: true
   doctrine_annotation_array_assignment: true
   doctrine_annotation_braces: true
   doctrine_annotation_indentation: true
   doctrine_annotation_spaces: true
+  elseif: true
   encoding: true
   ereg_to_preg: true
   escape_implicit_backslashes: true
   explicit_indirect_variable: true
   explicit_string_variable: true
   full_opening_tag: true
+  fully_qualified_strict_types: true
   function_declaration: true
   function_to_constant: true
   function_typehint_space: true
@@ -204,18 +228,24 @@ fixers:
   linebreak_after_opening_tag: true
   list_syntax:
 	syntax: short
+  logical_operators: true
   lowercase_cast: true
   lowercase_constants: true
   lowercase_keywords: true
+  lowercase_static_reference: true
   magic_constant_casing: true
   mb_str_functions: true
   method_argument_space: true
   method_chaining_indentation: true
+  method_separation: true
   modernize_types_casting: true
   multiline_comment_opening_closing: true
   multiline_whitespace_before_semicolons: true
+  native_constant_invocation: true
   native_function_casing: true
+  native_function_invocation: true
   no_alias_functions: true
+  no_binary_string: true
   no_blank_lines_after_class_opening: true
   no_blank_lines_after_phpdoc: true
   no_break_comment: true
@@ -237,11 +267,13 @@ fixers:
   no_spaces_around_offset: true
   no_spaces_inside_parenthesis: true
   no_superfluous_elseif: true
+  no_superfluous_phpdoc_tags: true
   no_trailing_comma_in_list_call: true
   no_trailing_comma_in_singleline_array: true
   no_trailing_whitespace: true
   no_trailing_whitespace_in_comment: true
   no_unneeded_control_parentheses: true
+  no_unneeded_curly_braces: true
   no_unneeded_final_method: true
   no_unreachable_default_argument_value: true
   no_unused_imports: true
@@ -286,20 +318,25 @@ fixers:
   pow_to_exponentiation: true
   psr4: true
   random_api_migration: true
+  return_assignment: true
   return_type_declaration:
 	space_before: one
   self_accessor: true
   semicolon_after_instruction: true
+  set_type_to_cast: true
   short_scalar_cast: true
   simplified_null_return: true
   single_blank_line_at_eof: true
   single_blank_line_before_namespace: true
   single_class_element_per_statement: true
+  single_import_per_statement: true
   single_line_after_imports: true
   single_line_comment_style: true
   single_quote: true
   space_after_semicolon: true
+  standardize_increment: true
   standardize_not_equals: true
+  string_line_ending: true
   switch_case_semicolon_to_colon: true
   switch_case_space: true
   ternary_operator_spaces: true

@@ -8,6 +8,11 @@ abstract class Game
 {
 	abstract public function startGame($lobby);
 
+	public function getLobbyFromGameId($id)
+	{
+		return Redis::hget('game:' . $id, 'lobby_id');
+	}
+
 	protected function getId($iteration = 0)
 	{
 		$id = str_random(16 + floor($iteration * .25));
