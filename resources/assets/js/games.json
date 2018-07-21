@@ -1,9 +1,10 @@
 {
 	"tictactoe": {
 		"shortname": "ttt",
-		"description": "A short game of classic Tic Tac Toe.",
+		"description": "A short game of classic Tic Tac Toe. Currently unavailable.",
 		"title": "Tic Tac Toe",
-		"maxPlayers": 2
+		"maxPlayers": 2,
+		"disabled": true
 	},
 
 	"drawonary": {
